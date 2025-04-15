@@ -1,6 +1,7 @@
 package com.grupo8.petshop.controller;
 
 import com.grupo8.petshop.dto.ProductoDTO;
+import com.grupo8.petshop.entity.Producto;
 import com.grupo8.petshop.service.IProductoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +20,8 @@ public class ProductoController {
     }
 
     @PostMapping
-    public ResponseEntity<ProductoDTO> crearProducto(@RequestBody ProductoDTO productoDTO) {
-        ProductoDTO productoARetornar = productoService.createProducto(productoDTO);
+    public ResponseEntity<Producto> crearProducto(@RequestBody ProductoDTO productoDTO) {
+        Producto productoARetornar = productoService.createProducto(productoDTO);
         if (productoARetornar == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } else {
@@ -29,18 +30,25 @@ public class ProductoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductoDTO>> traerTodos() {
+    public ResponseEntity<List<Producto>> traerTodos() {
         return ResponseEntity.ok(productoService.searchAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductoDTO> buscarProductoPorId(@PathVariable Long id) {
-        Optional<ProductoDTO> producto = productoService.searchForId(id);
+    public ResponseEntity<Producto> buscarProductoPorId(@PathVariable Long id) {
+        Optional<Producto> producto = productoService.searchForId(id);
         if (producto.isPresent()) {
             return ResponseEntity.ok(producto.get());
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Producto>> searchProductos(@RequestParam String nombre) {
+        nombre = nombre.trim();
+        List<Producto> productos = productoService.searchNombre(nombre);
+        return new ResponseEntity<>(productos, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
@@ -55,7 +63,7 @@ public class ProductoController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> borrarProducto(@PathVariable Long id) {
-        Optional<ProductoDTO> productoOptional = productoService.searchForId(id);
+        Optional<Producto> productoOptional = productoService.searchForId(id);
         if (productoOptional.isPresent()) {
             productoService.deleteProducto(id);
             return ResponseEntity.ok("{\"message\": \"producto eliminada\"}");
@@ -63,4 +71,6 @@ public class ProductoController {
             return new ResponseEntity<>("{\"message\": \"producto no encontrada\"}", HttpStatus.NOT_FOUND);
         }
     }
+
+
 }

@@ -1,6 +1,7 @@
 package com.grupo8.petshop.controller;
 
 import com.grupo8.petshop.dto.ColorDTO;
+import com.grupo8.petshop.entity.Color;
 import com.grupo8.petshop.service.IColorService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +20,8 @@ public class ColorController {
     }
 
     @PostMapping
-    public ResponseEntity<ColorDTO> crearColor(@RequestBody ColorDTO colorDTO) {
-        ColorDTO colorARetornar = colorService.createColor(colorDTO);
+    public ResponseEntity<Color> crearColor(@RequestBody ColorDTO colorDTO) {
+        Color colorARetornar = colorService.createColor(colorDTO);
         if (colorARetornar == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } else {
@@ -29,13 +30,13 @@ public class ColorController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ColorDTO>> traerTodos() {
+    public ResponseEntity<List<Color>> traerTodos() {
         return ResponseEntity.ok(colorService.searchAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ColorDTO> buscarColorPorId(@PathVariable Long id) {
-        Optional<ColorDTO> color = colorService.searchForId(id);
+    public ResponseEntity<Color> buscarColorPorId(@PathVariable Long id) {
+        Optional<Color> color = colorService.searchForId(id);
         if (color.isPresent()) {
             return ResponseEntity.ok(color.get());
         } else {
@@ -55,7 +56,7 @@ public class ColorController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> borrarColor(@PathVariable Long id) {
-        Optional<ColorDTO> colorOptional = colorService.searchForId(id);
+        Optional<Color> colorOptional = colorService.searchForId(id);
         if (colorOptional.isPresent()) {
             colorService.deleteColor(id);
             return ResponseEntity.ok("{\"message\": \"color eliminada\"}");

@@ -1,6 +1,7 @@
 package com.grupo8.petshop.controller;
 
 import com.grupo8.petshop.dto.TallaDTO;
+import com.grupo8.petshop.entity.Talla;
 import com.grupo8.petshop.service.ITallaService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +20,8 @@ public class TallaController {
     }
 
     @PostMapping
-    public ResponseEntity<TallaDTO> crearTalla(@RequestBody TallaDTO tallaDTO) {
-        TallaDTO tallaARetornar = tallaService.createTalla(tallaDTO);
+    public ResponseEntity<Talla> crearTalla(@RequestBody TallaDTO tallaDTO) {
+        Talla tallaARetornar = tallaService.createTalla(tallaDTO);
         if (tallaARetornar == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } else {
@@ -29,13 +30,13 @@ public class TallaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TallaDTO>> traerTodos() {
+    public ResponseEntity<List<Talla>> traerTodos() {
         return ResponseEntity.ok(tallaService.searchAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<TallaDTO> buscarTallaPorId(@PathVariable Long id) {
-        Optional<TallaDTO> talla = tallaService.searchForId(id);
+    public ResponseEntity<Talla> buscarTallaPorId(@PathVariable Long id) {
+        Optional<Talla> talla = tallaService.searchForId(id);
         if (talla.isPresent()) {
             return ResponseEntity.ok(talla.get());
         } else {
@@ -55,7 +56,7 @@ public class TallaController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> borrarTalla(@PathVariable Long id) {
-        Optional<TallaDTO> tallaOptional = tallaService.searchForId(id);
+        Optional<Talla> tallaOptional = tallaService.searchForId(id);
         if (tallaOptional.isPresent()) {
             tallaService.deleteTalla(id);
             return ResponseEntity.ok("{\"message\": \"talla eliminada\"}");

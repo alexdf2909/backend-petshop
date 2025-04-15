@@ -1,6 +1,7 @@
 package com.grupo8.petshop.controller;
 
 import com.grupo8.petshop.dto.CompraDTO;
+import com.grupo8.petshop.entity.Compra;
 import com.grupo8.petshop.service.ICompraService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +20,8 @@ public class CompraController {
     }
 
     @PostMapping
-    public ResponseEntity<CompraDTO> crearCompra(@RequestBody CompraDTO compraDTO) {
-        CompraDTO compraARetornar = compraService.createCompra(compraDTO);
+    public ResponseEntity<Compra> crearCompra(@RequestBody CompraDTO compraDTO) {
+        Compra compraARetornar = compraService.createCompra(compraDTO);
         if (compraARetornar == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } else {
@@ -29,13 +30,13 @@ public class CompraController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CompraDTO>> traerTodos() {
+    public ResponseEntity<List<Compra>> traerTodos() {
         return ResponseEntity.ok(compraService.searchAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CompraDTO> buscarCompraPorId(@PathVariable Long id) {
-        Optional<CompraDTO> compra = compraService.searchForId(id);
+    public ResponseEntity<Compra> buscarCompraPorId(@PathVariable Long id) {
+        Optional<Compra> compra = compraService.searchForId(id);
         if (compra.isPresent()) {
             return ResponseEntity.ok(compra.get());
         } else {
@@ -55,7 +56,7 @@ public class CompraController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> borrarCompra(@PathVariable Long id) {
-        Optional<CompraDTO> compraOptional = compraService.searchForId(id);
+        Optional<Compra> compraOptional = compraService.searchForId(id);
         if (compraOptional.isPresent()) {
             compraService.deleteCompra(id);
             return ResponseEntity.ok("{\"message\": \"compra eliminada\"}");

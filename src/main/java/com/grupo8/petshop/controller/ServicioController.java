@@ -1,6 +1,7 @@
 package com.grupo8.petshop.controller;
 
 import com.grupo8.petshop.dto.ServicioDTO;
+import com.grupo8.petshop.entity.Servicio;
 import com.grupo8.petshop.service.IServicioService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +20,8 @@ public class ServicioController {
     }
 
     @PostMapping
-    public ResponseEntity<ServicioDTO> crearServicio(@RequestBody ServicioDTO servicioDTO) {
-        ServicioDTO servicioARetornar = servicioService.createServicio(servicioDTO);
+    public ResponseEntity<Servicio> crearServicio(@RequestBody ServicioDTO servicioDTO) {
+        Servicio servicioARetornar = servicioService.createServicio(servicioDTO);
         if (servicioARetornar == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } else {
@@ -29,13 +30,13 @@ public class ServicioController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ServicioDTO>> traerTodos() {
+    public ResponseEntity<List<Servicio>> traerTodos() {
         return ResponseEntity.ok(servicioService.searchAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ServicioDTO> buscarServicioPorId(@PathVariable Long id) {
-        Optional<ServicioDTO> servicio = servicioService.searchForId(id);
+    public ResponseEntity<Servicio> buscarServicioPorId(@PathVariable Long id) {
+        Optional<Servicio> servicio = servicioService.searchForId(id);
         if (servicio.isPresent()) {
             return ResponseEntity.ok(servicio.get());
         } else {
@@ -55,7 +56,7 @@ public class ServicioController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> borrarServicio(@PathVariable Long id) {
-        Optional<ServicioDTO> servicioOptional = servicioService.searchForId(id);
+        Optional<Servicio> servicioOptional = servicioService.searchForId(id);
         if (servicioOptional.isPresent()) {
             servicioService.deleteServicio(id);
             return ResponseEntity.ok("{\"message\": \"servicio eliminada\"}");

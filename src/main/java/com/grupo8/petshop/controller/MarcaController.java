@@ -1,6 +1,7 @@
 package com.grupo8.petshop.controller;
 
 import com.grupo8.petshop.dto.MarcaDTO;
+import com.grupo8.petshop.entity.Marca;
 import com.grupo8.petshop.service.IMarcaService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +20,8 @@ public class MarcaController {
     }
 
     @PostMapping
-    public ResponseEntity<MarcaDTO> crearMarca(@RequestBody MarcaDTO marcaDTO) {
-        MarcaDTO marcaARetornar = marcaService.createMarca(marcaDTO);
+    public ResponseEntity<Marca> crearMarca(@RequestBody MarcaDTO marcaDTO) {
+        Marca marcaARetornar = marcaService.createMarca(marcaDTO);
         if (marcaARetornar == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } else {
@@ -29,13 +30,13 @@ public class MarcaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<MarcaDTO>> traerTodos() {
+    public ResponseEntity<List<Marca>> traerTodos() {
         return ResponseEntity.ok(marcaService.searchAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MarcaDTO> buscarMarcaPorId(@PathVariable Long id) {
-        Optional<MarcaDTO> marca = marcaService.searchForId(id);
+    public ResponseEntity<Marca> buscarMarcaPorId(@PathVariable Long id) {
+        Optional<Marca> marca = marcaService.searchForId(id);
         if (marca.isPresent()) {
             return ResponseEntity.ok(marca.get());
         } else {
@@ -55,7 +56,7 @@ public class MarcaController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> borrarMarca(@PathVariable Long id) {
-        Optional<MarcaDTO> marcaOptional = marcaService.searchForId(id);
+        Optional<Marca> marcaOptional = marcaService.searchForId(id);
         if (marcaOptional.isPresent()) {
             marcaService.deleteMarca(id);
             return ResponseEntity.ok("{\"message\": \"marca eliminada\"}");

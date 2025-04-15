@@ -1,6 +1,7 @@
 package com.grupo8.petshop.controller;
 
 import com.grupo8.petshop.dto.EspecieDTO;
+import com.grupo8.petshop.entity.Especie;
 import com.grupo8.petshop.service.IEspecieService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +20,8 @@ public class EspecieController {
     }
 
     @PostMapping
-    public ResponseEntity<EspecieDTO> crearEspecie(@RequestBody EspecieDTO especieDTO) {
-        EspecieDTO especieARetornar = especieService.createEspecie(especieDTO);
+    public ResponseEntity<Especie> crearEspecie(@RequestBody EspecieDTO especieDTO) {
+        Especie especieARetornar = especieService.createEspecie(especieDTO);
         if (especieARetornar == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } else {
@@ -29,13 +30,13 @@ public class EspecieController {
     }
 
     @GetMapping
-    public ResponseEntity<List<EspecieDTO>> traerTodos() {
+    public ResponseEntity<List<Especie>> traerTodos() {
         return ResponseEntity.ok(especieService.searchAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EspecieDTO> buscarEspeciePorId(@PathVariable Long id) {
-        Optional<EspecieDTO> especie = especieService.searchForId(id);
+    public ResponseEntity<Especie> buscarEspeciePorId(@PathVariable Long id) {
+        Optional<Especie> especie = especieService.searchForId(id);
         if (especie.isPresent()) {
             return ResponseEntity.ok(especie.get());
         } else {
@@ -55,7 +56,7 @@ public class EspecieController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> borrarEspecie(@PathVariable Long id) {
-        Optional<EspecieDTO> especieOptional = especieService.searchForId(id);
+        Optional<Especie> especieOptional = especieService.searchForId(id);
         if (especieOptional.isPresent()) {
             especieService.deleteEspecie(id);
             return ResponseEntity.ok("{\"message\": \"especie eliminada\"}");

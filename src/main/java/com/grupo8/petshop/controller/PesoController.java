@@ -1,6 +1,7 @@
 package com.grupo8.petshop.controller;
 
 import com.grupo8.petshop.dto.PesoDTO;
+import com.grupo8.petshop.entity.Peso;
 import com.grupo8.petshop.service.IPesoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +20,8 @@ public class PesoController {
     }
 
     @PostMapping
-    public ResponseEntity<PesoDTO> crearPeso(@RequestBody PesoDTO pesoDTO) {
-        PesoDTO pesoARetornar = pesoService.createPeso(pesoDTO);
+    public ResponseEntity<Peso> crearPeso(@RequestBody PesoDTO pesoDTO) {
+        Peso pesoARetornar = pesoService.createPeso(pesoDTO);
         if (pesoARetornar == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } else {
@@ -29,13 +30,13 @@ public class PesoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<PesoDTO>> traerTodos() {
+    public ResponseEntity<List<Peso>> traerTodos() {
         return ResponseEntity.ok(pesoService.searchAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PesoDTO> buscarPesoPorId(@PathVariable Long id) {
-        Optional<PesoDTO> peso = pesoService.searchForId(id);
+    public ResponseEntity<Peso> buscarPesoPorId(@PathVariable Long id) {
+        Optional<Peso> peso = pesoService.searchForId(id);
         if (peso.isPresent()) {
             return ResponseEntity.ok(peso.get());
         } else {
@@ -55,7 +56,7 @@ public class PesoController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> borrarPeso(@PathVariable Long id) {
-        Optional<PesoDTO> pesoOptional = pesoService.searchForId(id);
+        Optional<Peso> pesoOptional = pesoService.searchForId(id);
         if (pesoOptional.isPresent()) {
             pesoService.deletePeso(id);
             return ResponseEntity.ok("{\"message\": \"peso eliminada\"}");

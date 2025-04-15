@@ -1,6 +1,7 @@
 package com.grupo8.petshop.controller;
 
 import com.grupo8.petshop.dto.VarianteDTO;
+import com.grupo8.petshop.entity.Variante;
 import com.grupo8.petshop.service.IVarianteService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +20,8 @@ public class VarianteController {
     }
 
     @PostMapping
-    public ResponseEntity<VarianteDTO> crearVariante(@RequestBody VarianteDTO varianteDTO) {
-        VarianteDTO varianteARetornar = varianteService.createVariante(varianteDTO);
+    public ResponseEntity<Variante> crearVariante(@RequestBody VarianteDTO varianteDTO) {
+        Variante varianteARetornar = varianteService.createVariante(varianteDTO);
         if (varianteARetornar == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } else {
@@ -29,18 +30,24 @@ public class VarianteController {
     }
 
     @GetMapping
-    public ResponseEntity<List<VarianteDTO>> traerTodos() {
+    public ResponseEntity<List<Variante>> traerTodos() {
         return ResponseEntity.ok(varianteService.searchAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<VarianteDTO> buscarVariantePorId(@PathVariable Long id) {
-        Optional<VarianteDTO> variante = varianteService.searchForId(id);
+    public ResponseEntity<Variante> buscarVariantePorId(@PathVariable Long id) {
+        Optional<Variante> variante = varianteService.searchForId(id);
         if (variante.isPresent()) {
             return ResponseEntity.ok(variante.get());
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
+    }
+
+    @GetMapping("producto/{productoId}")
+    public ResponseEntity<List<Variante>> getReservationsByUser(@PathVariable Long productoId) {
+        List<Variante> variantes = varianteService.searchByProducto(productoId);
+        return ResponseEntity.ok(variantes);
     }
 
     @PutMapping("/{id}")
@@ -55,7 +62,7 @@ public class VarianteController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> borrarVariante(@PathVariable Long id) {
-        Optional<VarianteDTO> varianteOptional = varianteService.searchForId(id);
+        Optional<Variante> varianteOptional = varianteService.searchForId(id);
         if (varianteOptional.isPresent()) {
             varianteService.deleteVariante(id);
             return ResponseEntity.ok("{\"message\": \"variante eliminada\"}");

@@ -1,6 +1,7 @@
 package com.grupo8.petshop.controller;
 
 import com.grupo8.petshop.dto.EtiquetaDTO;
+import com.grupo8.petshop.entity.Etiqueta;
 import com.grupo8.petshop.service.IEtiquetaService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +20,8 @@ public class EtiquetaController {
     }
 
     @PostMapping
-    public ResponseEntity<EtiquetaDTO> crearEtiqueta(@RequestBody EtiquetaDTO etiquetaDTO) {
-        EtiquetaDTO etiquetaARetornar = etiquetaService.createEtiqueta(etiquetaDTO);
+    public ResponseEntity<Etiqueta> crearEtiqueta(@RequestBody EtiquetaDTO etiquetaDTO) {
+        Etiqueta etiquetaARetornar = etiquetaService.createEtiqueta(etiquetaDTO);
         if (etiquetaARetornar == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } else {
@@ -29,13 +30,13 @@ public class EtiquetaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<EtiquetaDTO>> traerTodos() {
+    public ResponseEntity<List<Etiqueta>> traerTodos() {
         return ResponseEntity.ok(etiquetaService.searchAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EtiquetaDTO> buscarEtiquetaPorId(@PathVariable Long id) {
-        Optional<EtiquetaDTO> etiqueta = etiquetaService.searchForId(id);
+    public ResponseEntity<Etiqueta> buscarEtiquetaPorId(@PathVariable Long id) {
+        Optional<Etiqueta> etiqueta = etiquetaService.searchForId(id);
         if (etiqueta.isPresent()) {
             return ResponseEntity.ok(etiqueta.get());
         } else {
@@ -55,7 +56,7 @@ public class EtiquetaController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> borrarEtiqueta(@PathVariable Long id) {
-        Optional<EtiquetaDTO> etiquetaOptional = etiquetaService.searchForId(id);
+        Optional<Etiqueta> etiquetaOptional = etiquetaService.searchForId(id);
         if (etiquetaOptional.isPresent()) {
             etiquetaService.deleteEtiqueta(id);
             return ResponseEntity.ok("{\"message\": \"etiqueta eliminada\"}");

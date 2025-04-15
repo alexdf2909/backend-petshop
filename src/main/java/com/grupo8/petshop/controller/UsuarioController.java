@@ -1,6 +1,7 @@
 package com.grupo8.petshop.controller;
 
 import com.grupo8.petshop.dto.UsuarioDTO;
+import com.grupo8.petshop.entity.Usuario;
 import com.grupo8.petshop.service.IUsuarioService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +20,8 @@ public class UsuarioController {
     }
 
     @PostMapping
-    public ResponseEntity<UsuarioDTO> crearUsuario(@RequestBody UsuarioDTO usuarioDTO) {
-        UsuarioDTO usuarioARetornar = usuarioService.createUsuario(usuarioDTO);
+    public ResponseEntity<Usuario> crearUsuario(@RequestBody UsuarioDTO usuarioDTO) {
+        Usuario usuarioARetornar = usuarioService.createUsuario(usuarioDTO);
         if (usuarioARetornar == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } else {
@@ -29,13 +30,13 @@ public class UsuarioController {
     }
 
     @GetMapping
-    public ResponseEntity<List<UsuarioDTO>> traerTodos() {
+    public ResponseEntity<List<Usuario>> traerTodos() {
         return ResponseEntity.ok(usuarioService.searchAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UsuarioDTO> buscarUsuarioPorId(@PathVariable Long id) {
-        Optional<UsuarioDTO> usuario = usuarioService.searchForId(id);
+    public ResponseEntity<Usuario> buscarUsuarioPorId(@PathVariable Long id) {
+        Optional<Usuario> usuario = usuarioService.searchForId(id);
         if (usuario.isPresent()) {
             return ResponseEntity.ok(usuario.get());
         } else {
@@ -55,7 +56,7 @@ public class UsuarioController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> borrarUsuario(@PathVariable Long id) {
-        Optional<UsuarioDTO> usuarioOptional = usuarioService.searchForId(id);
+        Optional<Usuario> usuarioOptional = usuarioService.searchForId(id);
         if (usuarioOptional.isPresent()) {
             usuarioService.deleteUsuario(id);
             return ResponseEntity.ok("{\"message\": \"usuario eliminada\"}");

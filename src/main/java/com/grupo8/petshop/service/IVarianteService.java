@@ -1,6 +1,7 @@
 package com.grupo8.petshop.service;
 
 import com.grupo8.petshop.dto.VarianteDTO;
+import com.grupo8.petshop.entity.Lote;
 import com.grupo8.petshop.entity.Variante;
 
 import java.util.List;
@@ -12,4 +13,5 @@ public interface IVarianteService {
     List<Variante> searchAll();
     void updateVariante(Long id, VarianteDTO varianteDTO);
     void deleteVariante(Long id);
+    List<Variante> searchByProducto(Long productoId);
 }

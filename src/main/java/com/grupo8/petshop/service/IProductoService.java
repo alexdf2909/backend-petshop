@@ -12,4 +12,5 @@ public interface IProductoService {
     List<Producto> searchAll();
     void updateProducto(Long id, ProductoDTO productoDTO);
     void deleteProducto(Long id);
+    List<Producto> searchNombre(String name);
 }

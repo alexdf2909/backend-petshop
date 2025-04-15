@@ -7,10 +7,7 @@ import com.grupo8.petshop.service.IProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -139,6 +136,16 @@ public class ProductoService implements IProductoService {
         varianteRepository.saveAll(variantesWithProducto);
         // Eliminar la categoría
         productoRepository.delete(producto);
+    }
+
+    @Override
+    public List<Producto> searchNombre(String name) {
+        List<Producto> productos = productoRepository.findByNameContainingIgnoreCase(name);
+        if (productos.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        return productos;
     }
 
     private ProductoDTO convertToDTO(Producto producto) {

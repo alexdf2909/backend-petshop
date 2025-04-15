@@ -1,6 +1,7 @@
 package com.grupo8.petshop.controller;
 
 import com.grupo8.petshop.dto.ImagenDTO;
+import com.grupo8.petshop.entity.Imagen;
 import com.grupo8.petshop.service.IImagenService;
 import com.grupo8.petshop.service.imp.CloudinaryService;
 import org.springframework.http.HttpStatus;
@@ -34,8 +35,8 @@ public class ImagenController {
     }
 
     @PostMapping
-    public ResponseEntity<ImagenDTO> crearImagen(@RequestBody ImagenDTO imagenDTO) {
-        ImagenDTO imagenARetornar = imagenService.createImagen(imagenDTO);
+    public ResponseEntity<Imagen> crearImagen(@RequestBody ImagenDTO imagenDTO) {
+        Imagen imagenARetornar = imagenService.createImagen(imagenDTO);
         if (imagenARetornar == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } else {
@@ -44,13 +45,13 @@ public class ImagenController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ImagenDTO>> traerTodos() {
+    public ResponseEntity<List<Imagen>> traerTodos() {
         return ResponseEntity.ok(imagenService.searchAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ImagenDTO> buscarImagenPorId(@PathVariable Long id) {
-        Optional<ImagenDTO> imagen = imagenService.searchForId(id);
+    public ResponseEntity<Imagen> buscarImagenPorId(@PathVariable Long id) {
+        Optional<Imagen> imagen = imagenService.searchForId(id);
         if (imagen.isPresent()) {
             return ResponseEntity.ok(imagen.get());
         } else {
@@ -70,7 +71,7 @@ public class ImagenController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> borrarImagen(@PathVariable Long id) {
-        Optional<ImagenDTO> imagenOptional = imagenService.searchForId(id);
+        Optional<Imagen> imagenOptional = imagenService.searchForId(id);
         if (imagenOptional.isPresent()) {
             imagenService.deleteImagen(id);
             return ResponseEntity.ok("{\"message\": \"imagen eliminada\"}");

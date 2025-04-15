@@ -1,6 +1,7 @@
 package com.grupo8.petshop.controller;
 
 import com.grupo8.petshop.dto.CategoriaDTO;
+import com.grupo8.petshop.entity.Categoria;
 import com.grupo8.petshop.service.ICategoriaService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +20,8 @@ public class CategoriaController {
     }
 
     @PostMapping
-    public ResponseEntity<CategoriaDTO> crearCategoria(@RequestBody CategoriaDTO categoriaDTO) {
-        CategoriaDTO categoriaARetornar = categoriaService.createCategoria(categoriaDTO);
+    public ResponseEntity<Categoria> crearCategoria(@RequestBody CategoriaDTO categoriaDTO) {
+        Categoria categoriaARetornar = categoriaService.createCategoria(categoriaDTO);
         if (categoriaARetornar == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } else {
@@ -29,13 +30,13 @@ public class CategoriaController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoriaDTO>> traerTodos() {
+    public ResponseEntity<List<Categoria>> traerTodos() {
         return ResponseEntity.ok(categoriaService.searchAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CategoriaDTO> buscarCategoriaPorId(@PathVariable Long id) {
-        Optional<CategoriaDTO> categoria = categoriaService.searchForId(id);
+    public ResponseEntity<Categoria> buscarCategoriaPorId(@PathVariable Long id) {
+        Optional<Categoria> categoria = categoriaService.searchForId(id);
         if (categoria.isPresent()) {
             return ResponseEntity.ok(categoria.get());
         } else {
@@ -55,7 +56,7 @@ public class CategoriaController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> borrarCategoria(@PathVariable Long id) {
-        Optional<CategoriaDTO> categoriaOptional = categoriaService.searchForId(id);
+        Optional<Categoria> categoriaOptional = categoriaService.searchForId(id);
         if (categoriaOptional.isPresent()) {
             categoriaService.deleteCategoria(id);
             return ResponseEntity.ok("{\"message\": \"categoria eliminada\"}");

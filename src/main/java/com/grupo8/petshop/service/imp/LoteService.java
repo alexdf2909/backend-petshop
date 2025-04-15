@@ -58,6 +58,19 @@ public class LoteService implements ILoteService {
         return loteRepository.findAll();
     }
 
+
+    @Override
+    public List<Lote> searchByVariante(Long varianteId) {
+        Optional<Variante> varianteOpt = varianteRepository.findById(varianteId);
+        if (varianteOpt.isEmpty()) {
+            throw new RuntimeException("Variante no encontrado");
+        }
+
+        Variante variante = varianteOpt.get();
+        return loteRepository.findByVariante(variante);
+    }
+
+
     @Override
     public void updateLote(Long id, LoteDTO loteDTO) {
         Optional<Lote> loteOpt = loteRepository.findById(id);

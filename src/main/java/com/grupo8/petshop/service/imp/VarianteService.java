@@ -72,6 +72,17 @@ public class VarianteService implements IVarianteService {
     }
 
     @Override
+    public List<Variante> searchByProducto(Long productoId) {
+        Optional<Producto> productoOpt = productoRepository.findById(productoId);
+        if (productoOpt.isEmpty()) {
+            throw new RuntimeException("Producto no encontrado");
+        }
+
+        Producto producto = productoOpt.get();
+        return varianteRepository.findByProducto(producto);
+    }
+
+    @Override
     public void updateVariante(Long id, VarianteDTO varianteDTO) {
         Optional<Variante> varianteOpt = varianteRepository.findById(id);
         if (varianteOpt.isEmpty()) {
