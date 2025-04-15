@@ -24,26 +24,22 @@ public class CategoriaService implements ICategoriaService {
     }
 
     @Override
-    public CategoriaDTO createCategoria(CategoriaDTO categoriaDTO) {
+    public Categoria createCategoria(CategoriaDTO categoriaDTO) {
         Categoria categoria = new Categoria();
         categoria.setNombre(categoriaDTO.getNombre());
         categoria.setImagenUrl(categoriaDTO.getImagenUrl());
 
-        Categoria savedCategoria = categoriaRepository.save(categoria);
-
-        return convertToDTO(savedCategoria);
+        return categoriaRepository.save(categoria);
     }
 
     @Override
-    public Optional<CategoriaDTO> searchForId(Long id) {
-        return categoriaRepository.findById(id).map(this::convertToDTO);
+    public Optional<Categoria> searchForId(Long id) {
+        return categoriaRepository.findById(id);
     }
 
     @Override
-    public List<CategoriaDTO> searchAll() {
-        return categoriaRepository.findAll().stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+    public List<Categoria> searchAll() {
+        return categoriaRepository.findAll();
     }
 
     @Override

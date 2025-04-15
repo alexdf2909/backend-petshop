@@ -24,25 +24,21 @@ public class ColorService implements IColorService {
     }
 
     @Override
-    public ColorDTO createColor(ColorDTO colorDTO) {
+    public Color createColor(ColorDTO colorDTO) {
         Color color = new Color();
         color.setValor(colorDTO.getValor());
 
-        Color savedColor = colorRepository.save(color);
-
-        return convertToDTO(savedColor);
+        return colorRepository.save(color);
     }
 
     @Override
-    public Optional<ColorDTO> searchForId(Long id) {
-        return colorRepository.findById(id).map(this::convertToDTO);
+    public Optional<Color> searchForId(Long id) {
+        return colorRepository.findById(id);
     }
 
     @Override
-    public List<ColorDTO> searchAll() {
-        return colorRepository.findAll().stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+    public List<Color> searchAll() {
+        return colorRepository.findAll();
     }
 
     @Override

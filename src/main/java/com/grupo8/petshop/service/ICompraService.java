@@ -1,14 +1,15 @@
 package com.grupo8.petshop.service;
 
 import com.grupo8.petshop.dto.CompraDTO;
+import com.grupo8.petshop.entity.Compra;
 
 import java.util.List;
 import java.util.Optional;
 
 public interface ICompraService {
-    CompraDTO createCompra(CompraDTO compraDTO);
-    Optional<CompraDTO> searchForId(Long id);
-    List<CompraDTO> searchAll();
+    Compra createCompra(CompraDTO compraDTO);
+    Optional<Compra> searchForId(Long id);
+    List<Compra> searchAll();
     void updateCompra(Long id, CompraDTO compraDTO);
     void deleteCompra(Long id);
 }

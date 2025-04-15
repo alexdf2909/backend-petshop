@@ -24,26 +24,22 @@ public class PesoService implements IPesoService {
     }
 
     @Override
-    public PesoDTO createPeso(PesoDTO pesoDTO) {
+    public Peso createPeso(PesoDTO pesoDTO) {
         Peso peso = new Peso();
         peso.setValor(pesoDTO.getValor());
         peso.setMedida(pesoDTO.getMedida());
 
-        Peso savedPeso = pesoRepository.save(peso);
-
-        return convertToDTO(savedPeso);
+        return pesoRepository.save(peso);
     }
 
     @Override
-    public Optional<PesoDTO> searchForId(Long id) {
-        return pesoRepository.findById(id).map(this::convertToDTO);
+    public Optional<Peso> searchForId(Long id) {
+        return pesoRepository.findById(id);
     }
 
     @Override
-    public List<PesoDTO> searchAll() {
-        return pesoRepository.findAll().stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+    public List<Peso> searchAll() {
+        return pesoRepository.findAll();
     }
 
     @Override

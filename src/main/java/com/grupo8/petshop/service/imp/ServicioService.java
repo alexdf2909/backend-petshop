@@ -19,7 +19,7 @@ public class ServicioService implements IServicioService {
     }
 
     @Override
-    public ServicioDTO createServicio(ServicioDTO servicioDTO) {
+    public Servicio createServicio(ServicioDTO servicioDTO) {
         Servicio servicio = new Servicio();
         servicio.setNombre(servicioDTO.getNombre());
         servicio.setDescripcion(servicioDTO.getDescripcion());
@@ -27,21 +27,18 @@ public class ServicioService implements IServicioService {
         servicio.setImagenAntes(servicioDTO.getImagenAntes());
         servicio.setImagenDespues(servicioDTO.getImagenDespues());
 
-        Servicio savedServicio = servicioRepository.save(servicio);
+        return servicioRepository.save(servicio);
 
-        return convertToDTO(savedServicio);
     }
 
     @Override
-    public Optional<ServicioDTO> searchForId(Long id) {
-        return servicioRepository.findById(id).map(this::convertToDTO);
+    public Optional<Servicio> searchForId(Long id) {
+        return servicioRepository.findById(id);
     }
 
     @Override
-    public List<ServicioDTO> searchAll() {
-        return servicioRepository.findAll().stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+    public List<Servicio> searchAll() {
+        return servicioRepository.findAll();
     }
 
     @Override

@@ -24,26 +24,22 @@ public class MarcaService implements IMarcaService {
     }
 
     @Override
-    public MarcaDTO createMarca(MarcaDTO marcaDTO) {
+    public Marca createMarca(MarcaDTO marcaDTO) {
         Marca marca = new Marca();
         marca.setNombre(marcaDTO.getNombre());
         marca.setImagenUrl(marcaDTO.getImagenUrl());
 
-        Marca savedMarca = marcaRepository.save(marca);
-
-        return convertToDTO(savedMarca);
+        return marcaRepository.save(marca);
     }
 
     @Override
-    public Optional<MarcaDTO> searchForId(Long id) {
-        return marcaRepository.findById(id).map(this::convertToDTO);
+    public Optional<Marca> searchForId(Long id) {
+        return marcaRepository.findById(id);
     }
 
     @Override
-    public List<MarcaDTO> searchAll() {
-        return marcaRepository.findAll().stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+    public List<Marca> searchAll() {
+        return marcaRepository.findAll();
     }
 
     @Override

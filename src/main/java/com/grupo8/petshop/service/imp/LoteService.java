@@ -30,7 +30,7 @@ public class LoteService implements ILoteService {
     }
 
     @Override
-    public LoteDTO createLote(LoteDTO loteDTO) {
+    public Lote createLote(LoteDTO loteDTO) {
         Compra compra = compraRepository.findById(loteDTO.getCompraId())
                 .orElseThrow(() -> new RuntimeException("Compra no encontrada"));
 
@@ -45,21 +45,17 @@ public class LoteService implements ILoteService {
         lote.setStock(loteDTO.getStock());
         lote.setFechaVencimiento(loteDTO.getFechaVencimiento());
 
-        Lote savedLote = loteRepository.save(lote);
-
-        return convertToDTO(savedLote);
+        return loteRepository.save(lote);
     }
 
     @Override
-    public Optional<LoteDTO> searchForId(Long id) {
-        return loteRepository.findById(id).map(this::convertToDTO);
+    public Optional<Lote> searchForId(Long id) {
+        return loteRepository.findById(id);
     }
 
     @Override
-    public List<LoteDTO> searchAll() {
-        return loteRepository.findAll().stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+    public List<Lote> searchAll() {
+        return loteRepository.findAll();
     }
 
     @Override

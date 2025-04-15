@@ -19,25 +19,21 @@ public class ImagenService implements IImagenService {
     }
 
     @Override
-    public ImagenDTO createImagen(ImagenDTO imagenDTO) {
+    public Imagen createImagen(ImagenDTO imagenDTO) {
         Imagen imagen = new Imagen();
         imagen.setImagenUrl(imagenDTO.getImagenUrl());
 
-        Imagen savedImagen = imagenRepository.save(imagen);
-
-        return convertToDTO(savedImagen);
+        return imagenRepository.save(imagen);
     }
 
     @Override
-    public Optional<ImagenDTO> searchForId(Long id) {
-        return imagenRepository.findById(id).map(this::convertToDTO);
+    public Optional<Imagen> searchForId(Long id) {
+        return imagenRepository.findById(id);
     }
 
     @Override
-    public List<ImagenDTO> searchAll() {
-        return imagenRepository.findAll().stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+    public List<Imagen> searchAll() {
+        return imagenRepository.findAll();
     }
 
     @Override

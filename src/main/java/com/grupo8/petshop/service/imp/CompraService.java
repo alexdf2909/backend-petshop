@@ -30,7 +30,7 @@ public class CompraService implements ICompraService {
     }
 
     @Override
-    public CompraDTO createCompra(CompraDTO compraDTO) {
+    public Compra createCompra(CompraDTO compraDTO) {
         Usuario usuario = usuarioRepository.findById(compraDTO.getUsuarioId())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
@@ -41,21 +41,17 @@ public class CompraService implements ICompraService {
         compra.setFechaRegistro(compraDTO.getFechaRegistro());
         compra.setUrlImagenComprobante(compraDTO.getUrlImagenComprobante());
 
-        Compra savedCompra = compraRepository.save(compra);
-
-        return convertToDTO(savedCompra);
+        return compraRepository.save(compra);
     }
 
     @Override
-    public Optional<CompraDTO> searchForId(Long id) {
-        return compraRepository.findById(id).map(this::convertToDTO);
+    public Optional<Compra> searchForId(Long id) {
+        return compraRepository.findById(id);
     }
 
     @Override
-    public List<CompraDTO> searchAll() {
-        return compraRepository.findAll().stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+    public List<Compra> searchAll() {
+        return compraRepository.findAll();
     }
 
     @Override

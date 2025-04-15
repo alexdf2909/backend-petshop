@@ -30,7 +30,7 @@ public class UsuarioService implements IUsuarioService {
     }
 
     @Override
-    public UsuarioDTO createUsuario(UsuarioDTO usuarioDTO) {
+    public Usuario createUsuario(UsuarioDTO usuarioDTO) {
         if (usuarioRepository.existsByCorreo(usuarioDTO.getCorreo()))
             throw new RuntimeException("Correo ya registrado");
 
@@ -52,21 +52,17 @@ public class UsuarioService implements IUsuarioService {
             });
         }
 
-        Usuario savedUsuario = usuarioRepository.save(usuario);
-
-        return convertToDTO(savedUsuario);
+        return usuarioRepository.save(usuario);
     }
 
     @Override
-    public Optional<UsuarioDTO> searchForId(Long id) {
-        return usuarioRepository.findById(id).map(this::convertToDTO);
+    public Optional<Usuario> searchForId(Long id) {
+        return usuarioRepository.findById(id);
     }
 
     @Override
-    public List<UsuarioDTO> searchAll() {
-        return usuarioRepository.findAll().stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+    public List<Usuario> searchAll() {
+        return usuarioRepository.findAll();
     }
 
     @Override

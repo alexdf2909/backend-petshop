@@ -24,26 +24,22 @@ public class EspecieService implements IEspecieService {
     }
 
     @Override
-    public EspecieDTO createEspecie(EspecieDTO especieDTO) {
+    public Especie createEspecie(EspecieDTO especieDTO) {
         Especie especie = new Especie();
         especie.setNombre(especieDTO.getNombre());
         especie.setImagenUrl(especieDTO.getImagenUrl());
 
-        Especie savedEspecie = especieRepository.save(especie);
-
-        return convertToDTO(savedEspecie);
+        return especieRepository.save(especie);
     }
 
     @Override
-    public Optional<EspecieDTO> searchForId(Long id) {
-        return especieRepository.findById(id).map(this::convertToDTO);
+    public Optional<Especie> searchForId(Long id) {
+        return especieRepository.findById(id);
     }
 
     @Override
-    public List<EspecieDTO> searchAll() {
-        return especieRepository.findAll().stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+    public List<Especie> searchAll() {
+        return especieRepository.findAll();
     }
 
     @Override

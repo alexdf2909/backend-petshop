@@ -34,7 +34,7 @@ public class ProductoService implements IProductoService {
     }
 
     @Override
-    public ProductoDTO createProducto(ProductoDTO productoDTO) {
+    public Producto createProducto(ProductoDTO productoDTO) {
         Categoria categoria = categoriaRepository.findById(productoDTO.getCategoriaId())
                 .orElseThrow(() -> new RuntimeException("Categoria no encontrada"));
         Marca marca = marcaRepository.findById(productoDTO.getMarcaId())
@@ -58,21 +58,17 @@ public class ProductoService implements IProductoService {
         producto.setNombre(productoDTO.getNombre());
         producto.setDescripcion(productoDTO.getDescripcion());
 
-        Producto savedProducto = productoRepository.save(producto);
-
-        return convertToDTO(savedProducto);
+        return productoRepository.save(producto);
     }
 
     @Override
-    public Optional<ProductoDTO> searchForId(Long id) {
-        return productoRepository.findById(id).map(this::convertToDTO);
+    public Optional<Producto> searchForId(Long id) {
+        return productoRepository.findById(id);
     }
 
     @Override
-    public List<ProductoDTO> searchAll() {
-        return productoRepository.findAll().stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+    public List<Producto> searchAll() {
+        return productoRepository.findAll();
     }
 
     @Override

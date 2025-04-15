@@ -30,7 +30,7 @@ public class VarianteService implements IVarianteService {
     }
 
     @Override
-    public VarianteDTO createVariante(VarianteDTO varianteDTO) {
+    public Variante createVariante(VarianteDTO varianteDTO) {
         Color color = colorRepository.findById(varianteDTO.getColorId())
                 .orElseThrow(() -> new RuntimeException("Color no encontrada"));
         Talla talla = tallaRepository.findById(varianteDTO.getTallaId())
@@ -58,21 +58,17 @@ public class VarianteService implements IVarianteService {
             });
         }
 
-        Variante savedVariante = varianteRepository.save(variante);
-
-        return convertToDTO(savedVariante);
+        return varianteRepository.save(variante);
     }
 
     @Override
-    public Optional<VarianteDTO> searchForId(Long id) {
-        return varianteRepository.findById(id).map(this::convertToDTO);
+    public Optional<Variante> searchForId(Long id) {
+        return varianteRepository.findById(id);
     }
 
     @Override
-    public List<VarianteDTO> searchAll() {
-        return varianteRepository.findAll().stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+    public List<Variante> searchAll() {
+        return varianteRepository.findAll();
     }
 
     @Override

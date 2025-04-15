@@ -25,32 +25,26 @@ public class EtiquetaService implements IEtiquetaService {
     }
 
     @Override
-    public EtiquetaDTO createEtiqueta(EtiquetaDTO etiquetaDTO) {
+    public Etiqueta createEtiqueta(EtiquetaDTO etiquetaDTO) {
         Etiqueta etiqueta = new Etiqueta();
         etiqueta.setNombre(etiquetaDTO.getNombre());
 
-        Etiqueta savedEtiqueta = etiquetaRepository.save(etiqueta);
-
-        return new EtiquetaDTO(savedEtiqueta.getEtiquetaId(), savedEtiqueta.getNombre());
+        return etiquetaRepository.save(etiqueta);
     }
 
     @Override
-    public Optional<EtiquetaDTO> searchForId(Long id) {
+    public Optional<Etiqueta> searchForId(Long id) {
         Optional<Etiqueta> etiqueta = etiquetaRepository.findById(id);
         if (etiqueta.isPresent()) {
             Etiqueta savedEtiqueta = etiqueta.get();
-            EtiquetaDTO etiquetaDTO = new EtiquetaDTO(savedEtiqueta.getEtiquetaId(), savedEtiqueta.getNombre());
-            return Optional.of(etiquetaDTO);
+            return Optional.of(savedEtiqueta);
         }
         return Optional.empty();
     }
 
     @Override
-    public List<EtiquetaDTO> searchAll() {
-        List<Etiqueta> etiquetas = etiquetaRepository.findAll();
-        return etiquetas.stream()
-                .map(etiqueta -> new EtiquetaDTO(etiqueta.getEtiquetaId(), etiqueta.getNombre()))
-                .collect(Collectors.toList());
+    public List<Etiqueta> searchAll() {
+        return etiquetaRepository.findAll();
     }
 
     @Override

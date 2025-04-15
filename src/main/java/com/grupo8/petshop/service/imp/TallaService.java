@@ -24,25 +24,22 @@ public class TallaService implements ITallaService {
     }
 
     @Override
-    public TallaDTO createTalla(TallaDTO tallaDTO) {
+    public Talla createTalla(TallaDTO tallaDTO) {
         Talla talla = new Talla();
         talla.setValor(tallaDTO.getValor());
 
-        Talla savedTalla = tallaRepository.save(talla);
+        return tallaRepository.save(talla);
 
-        return convertToDTO(savedTalla);
     }
 
     @Override
-    public Optional<TallaDTO> searchForId(Long id) {
-        return tallaRepository.findById(id).map(this::convertToDTO);
+    public Optional<Talla> searchForId(Long id) {
+        return tallaRepository.findById(id);
     }
 
     @Override
-    public List<TallaDTO> searchAll() {
-        return tallaRepository.findAll().stream()
-                .map(this::convertToDTO)
-                .collect(Collectors.toList());
+    public List<Talla> searchAll() {
+        return tallaRepository.findAll();
     }
 
     @Override
