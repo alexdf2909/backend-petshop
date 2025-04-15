@@ -1,0 +1,66 @@
+package com.grupo8.petshop.controller;
+
+import com.grupo8.petshop.dto.UsuarioDTO;
+import com.grupo8.petshop.service.IUsuarioService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+@RequestMapping("/usuario")
+public class UsuarioController {
+    private final IUsuarioService usuarioService;
+
+    public UsuarioController(IUsuarioService usuarioService) {
+        this.usuarioService = usuarioService;
+    }
+
+    @PostMapping
+    public ResponseEntity<UsuarioDTO> crearUsuario(@RequestBody UsuarioDTO usuarioDTO) {
+        UsuarioDTO usuarioARetornar = usuarioService.createUsuario(usuarioDTO);
+        if (usuarioARetornar == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } else {
+            return ResponseEntity.status(HttpStatus.CREATED).body(usuarioARetornar);
+        }
+    }
+
+    @GetMapping
+    public ResponseEntity<List<UsuarioDTO>> traerTodos() {
+        return ResponseEntity.ok(usuarioService.searchAll());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UsuarioDTO> buscarUsuarioPorId(@PathVariable Long id) {
+        Optional<UsuarioDTO> usuario = usuarioService.searchForId(id);
+        if (usuario.isPresent()) {
+            return ResponseEntity.ok(usuario.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<String> actualizarUsuario(@PathVariable Long id, @RequestBody UsuarioDTO usuarioDTO) {
+        try {
+            usuarioService.updateUsuario(id, usuarioDTO);
+            return ResponseEntity.ok("{\"message\": \"Usuario modificada\"}");
+        } catch (RuntimeException e) {
+            return new ResponseEntity<>("{\"message\": \"" + e.getMessage() + "\"}", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> borrarUsuario(@PathVariable Long id) {
+        Optional<UsuarioDTO> usuarioOptional = usuarioService.searchForId(id);
+        if (usuarioOptional.isPresent()) {
+            usuarioService.deleteUsuario(id);
+            return ResponseEntity.ok("{\"message\": \"usuario eliminada\"}");
+        } else {
+            return new ResponseEntity<>("{\"message\": \"usuario no encontrada\"}", HttpStatus.NOT_FOUND);
+        }
+    }
+}
