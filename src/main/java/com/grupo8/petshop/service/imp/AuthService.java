@@ -55,7 +55,7 @@ public class AuthService {
         if (!usuario.getVerificado())
             throw new RuntimeException("Cuenta no verificada");
 
-        return jwtUtil.generateToken(usuario.getCorreo());
+        return jwtUtil.generateToken(usuario.getCorreo(), usuario.getRol().toString());
     }
 
     public void verificar(VerificationRequest request) {

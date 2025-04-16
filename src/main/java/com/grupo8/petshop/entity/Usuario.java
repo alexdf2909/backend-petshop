@@ -35,7 +35,7 @@ public class Usuario {
     @Column(nullable = false)
     private Rol rol;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private String codigoVerificacion;
 
     @Column(nullable = false)

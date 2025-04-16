@@ -1,6 +1,7 @@
 package com.grupo8.petshop.config;
 
 import com.grupo8.petshop.security.CustomUserDetailsService;
+import com.grupo8.petshop.security.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,12 +11,14 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    private final JwtFilter jwtFilter;
     private final CustomUserDetailsService userDetailsService;
 
     @Bean
@@ -41,13 +44,75 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/producto/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/producto/**").hasRole("ADMIN")
 
+                        // Solo ADMIN puede usar POST, PUT, DELETE en /variante/**
+                        .requestMatchers(HttpMethod.POST, "/variante/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/variante/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/variante/**").hasRole("ADMIN")
+
+                        // Solo ADMIN puede usar POST, PUT, DELETE en /lote/**
+                        .requestMatchers(HttpMethod.POST, "/lote/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/lote/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/lote/**").hasRole("ADMIN")
+
+                        // Solo ADMIN puede usar POST, PUT, DELETE en /compra/**
+                        .requestMatchers(HttpMethod.POST, "/compra/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/compra/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/compra/**").hasRole("ADMIN")
+
+                        // Solo ADMIN puede usar POST, PUT, DELETE en /categoria/**
+                        .requestMatchers(HttpMethod.POST, "/categoria/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/categoria/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/categoria/**").hasRole("ADMIN")
+
+                        // Solo ADMIN puede usar POST, PUT, DELETE en /color/**
+                        .requestMatchers(HttpMethod.POST, "/color/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/color/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/color/**").hasRole("ADMIN")
+
+                        // Solo ADMIN puede usar POST, PUT, DELETE en /especie/**
+                        .requestMatchers(HttpMethod.POST, "/especie/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/especie/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/especie/**").hasRole("ADMIN")
+
+                        // Solo ADMIN puede usar POST, PUT, DELETE en /etiqueta/**
+                        .requestMatchers(HttpMethod.POST, "/etiqueta/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/etiqueta/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/etiqueta/**").hasRole("ADMIN")
+
+                        // Solo ADMIN puede usar POST, PUT, DELETE en /imagen/**
+                        .requestMatchers(HttpMethod.POST, "/imagen/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/imagen/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/imagen/**").hasRole("ADMIN")
+
+                        // Solo ADMIN puede usar POST, PUT, DELETE en /marca/**
+                        .requestMatchers(HttpMethod.POST, "/marca/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/marca/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/marca/**").hasRole("ADMIN")
+
+                        // Solo ADMIN puede usar POST, PUT, DELETE en /peso/**
+                        .requestMatchers(HttpMethod.POST, "/peso/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/peso/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/peso/**").hasRole("ADMIN")
+
+                        // Solo ADMIN puede usar POST, PUT, DELETE en /servicio/**
+                        .requestMatchers(HttpMethod.POST, "/servicio/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/servicio/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/servicio/**").hasRole("ADMIN")
+
+                        // Solo ADMIN puede usar POST, PUT, DELETE en /talla/**
+                        .requestMatchers(HttpMethod.POST, "/talla/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/talla/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/talla/**").hasRole("ADMIN")
+
+
                         // Acceso solo para admin a /admin/**
                         .requestMatchers("/admin/**").hasRole("ADMIN")
 
                         // Todo lo demás requiere autenticación
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
                 .userDetailsService(userDetailsService)
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

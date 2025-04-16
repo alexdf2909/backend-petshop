@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -17,9 +18,10 @@ public class JwtUtil {
     @Value("${jwt.secret}")
     private String secret;
 
-    public String generateToken(String correo) {
+    public String generateToken(String correo, String rol) {
         return JWT.create()
                 .withSubject(correo)
+                .withClaim("rol", rol)
                 .withIssuedAt(new Date())
                 .withExpiresAt(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)))
                 .sign(Algorithm.HMAC256(secret));

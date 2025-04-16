@@ -13,6 +13,6 @@ public interface IUsuarioService {
     List<Usuario> searchAll();
     void updateUsuario(Long id, UsuarioDTO usuarioDTO);
     void deleteUsuario(Long id);
-    Optional<UsuarioDTO> addFavorite(Long usuarioId, Long productoId);
-    Optional<UsuarioDTO> removeFavorite(Long usuarioId, Long productoId);
+    Optional<Usuario> addFavorite(Long usuarioId, Long productoId);
+    Optional<Usuario> removeFavorite(Long usuarioId, Long productoId);
 }

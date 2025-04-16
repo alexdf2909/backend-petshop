@@ -64,4 +64,26 @@ public class UsuarioController {
             return new ResponseEntity<>("{\"message\": \"usuario no encontrada\"}", HttpStatus.NOT_FOUND);
         }
     }
+
+    // Agregar favorito
+    @PostMapping("/{usuarioId}/favorito/{productoId}")
+    public ResponseEntity<Usuario> addFavorite(@PathVariable Long usuarioId, @PathVariable Long productoId) {
+        Optional<Usuario> updatedUser = usuarioService.addFavorite(usuarioId, productoId);
+        if (updatedUser.isPresent()) {
+            return ResponseEntity.ok(updatedUser.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    // Eliminar favorito
+    @DeleteMapping("/{usuarioId}/favorito/{productoId}")
+    public ResponseEntity<Usuario> removeFavorite(@PathVariable Long usuarioId, @PathVariable Long productoId) {
+        Optional<Usuario> updatedUser = usuarioService.removeFavorite(usuarioId, productoId);
+        if (updatedUser.isPresent()) {
+            return ResponseEntity.ok(updatedUser.get());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
 }

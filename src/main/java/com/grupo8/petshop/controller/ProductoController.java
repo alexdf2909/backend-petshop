@@ -71,6 +71,4 @@ public class ProductoController {
             return new ResponseEntity<>("{\"message\": \"producto no encontrada\"}", HttpStatus.NOT_FOUND);
         }
     }
-
-
 }
