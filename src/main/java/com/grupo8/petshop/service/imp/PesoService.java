@@ -27,7 +27,6 @@ public class PesoService implements IPesoService {
     public Peso createPeso(PesoDTO pesoDTO) {
         Peso peso = new Peso();
         peso.setValor(pesoDTO.getValor());
-        peso.setMedida(pesoDTO.getMedida());
 
         return pesoRepository.save(peso);
     }
@@ -51,11 +50,8 @@ public class PesoService implements IPesoService {
 
         Peso peso = pesoOpt.get();
 
-        if (pesoDTO.getValor() != null) {
+        if (pesoDTO.getValor() != null && !pesoDTO.getValor().isEmpty()) {
             peso.setValor(pesoDTO.getValor());
-        }
-        if (pesoDTO.getMedida() != null && !pesoDTO.getMedida().isEmpty()) {
-            peso.setMedida(pesoDTO.getMedida());
         }
 
         pesoRepository.save(peso);
@@ -85,8 +81,7 @@ public class PesoService implements IPesoService {
     private PesoDTO convertToDTO(Peso peso) {
         return new PesoDTO(
                 peso.getPesoId(),
-                peso.getValor(),
-                peso.getMedida()
+                peso.getValor()
         );
     }
 }

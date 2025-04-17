@@ -15,8 +15,5 @@ public class Peso {
     private Long pesoId;
 
     @Column(nullable = false)
-    private Float valor;
-
-    @Column(nullable = false)
-    private String medida;
+    private String valor;
 }

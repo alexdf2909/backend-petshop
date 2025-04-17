@@ -13,7 +13,5 @@ public class PesoDTO {
 
     private Long pesoId;
 
-    private Float valor;
-
-    private String medida;
+    private String valor;
 }
