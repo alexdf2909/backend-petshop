@@ -70,6 +70,17 @@ public class LoteService implements ILoteService {
         return loteRepository.findByVariante(variante);
     }
 
+    @Override
+    public List<Lote> searchByCompra(Long compraId) {
+        Optional<Compra> compraOpt = compraRepository.findById(compraId);
+        if (compraOpt.isEmpty()) {
+            throw new RuntimeException("Compra no encontrado");
+        }
+
+        Compra compra = compraOpt.get();
+        return loteRepository.findByCompra(compra);
+    }
+
 
     @Override
     public void updateLote(Long id, LoteDTO loteDTO) {
@@ -80,9 +91,8 @@ public class LoteService implements ILoteService {
 
         Lote lote = loteOpt.get();
 
-        if (loteDTO.getStock() < 0) {
-            lote.setStock(loteDTO.getStock());
-        }
+        lote.setStock(loteDTO.getStock());
+
         if (loteDTO.getVarianteId() != null) {
             Variante variante = varianteRepository.findById(loteDTO.getVarianteId())
                     .orElseThrow(() -> new RuntimeException("Variante no encontrada"));

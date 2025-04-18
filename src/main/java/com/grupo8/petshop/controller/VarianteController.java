@@ -45,7 +45,7 @@ public class VarianteController {
     }
 
     @GetMapping("producto/{productoId}")
-    public ResponseEntity<List<Variante>> getReservationsByUser(@PathVariable Long productoId) {
+    public ResponseEntity<List<Variante>> getVariantesByProducto(@PathVariable Long productoId) {
         List<Variante> variantes = varianteService.searchByProducto(productoId);
         return ResponseEntity.ok(variantes);
     }

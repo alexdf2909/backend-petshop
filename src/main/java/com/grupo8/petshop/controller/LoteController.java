@@ -46,8 +46,14 @@ public class LoteController {
     }
 
     @GetMapping("variante/{varianteId}")
-    public ResponseEntity<List<Lote>> getReservationsByUser(@PathVariable Long varianteId) {
+    public ResponseEntity<List<Lote>> getLotesByVariante(@PathVariable Long varianteId) {
         List<Lote> lotes = loteService.searchByVariante(varianteId);
+        return ResponseEntity.ok(lotes);
+    }
+
+    @GetMapping("compra/{compraId}")
+    public ResponseEntity<List<Lote>> getLotesByCompra(@PathVariable Long compraId) {
+        List<Lote> lotes = loteService.searchByCompra(compraId);
         return ResponseEntity.ok(lotes);
     }
 

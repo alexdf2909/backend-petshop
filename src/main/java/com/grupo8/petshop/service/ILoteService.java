@@ -14,4 +14,5 @@ public interface ILoteService {
     void updateLote(Long id, LoteDTO loteDTO);
     void deleteLote(Long id);
     List<Lote> searchByVariante(Long varianteId);
+    List<Lote> searchByCompra(Long compraId);
 }
