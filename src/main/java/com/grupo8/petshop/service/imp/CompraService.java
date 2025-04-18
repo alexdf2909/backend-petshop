@@ -40,6 +40,7 @@ public class CompraService implements ICompraService {
         compra.setCodigoComprobante(compraDTO.getCodigoComprobante());
         compra.setFechaRegistro(compraDTO.getFechaRegistro());
         compra.setUrlImagenComprobante(compraDTO.getUrlImagenComprobante());
+        compra.setDeleted(false);
 
         return compraRepository.save(compra);
     }
@@ -82,6 +83,10 @@ public class CompraService implements ICompraService {
             compra.setUrlImagenComprobante(compraDTO.getUrlImagenComprobante());
         }
 
+        if(compraDTO.isDeleted() && !compra.isDeleted()){
+            deleteCompra(compraDTO.getCompraId());
+        }
+
         compraRepository.save(compra);
     }
 
@@ -102,7 +107,7 @@ public class CompraService implements ICompraService {
         // Guardar los cambios en las prendas
         loteRepository.saveAll(lotesWithCompra);
         // Eliminar la categoría
-        compraRepository.delete(compra);
+        compra.setDeleted(true);
     }
 
     private CompraDTO convertToDTO(Compra compra) {
@@ -112,7 +117,8 @@ public class CompraService implements ICompraService {
                 compra.getUrlImagenComprobante(),
                 compra.getFechaCompra(),
                 compra.getFechaRegistro(),
-                compra.getUsuario().getUsuarioId()
+                compra.getUsuario().getUsuarioId(),
+                compra.isDeleted()
         );
     }
 }

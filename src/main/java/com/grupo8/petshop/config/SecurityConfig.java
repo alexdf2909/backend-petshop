@@ -104,6 +104,11 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/talla/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/talla/**").hasRole("ADMIN")
 
+                        // Solo ADMIN puede usar POST, PUT, DELETE en /usuario/**
+                        .requestMatchers(HttpMethod.POST, "/usuario/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/usuario/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/usuario/**").hasRole("ADMIN")
+
 
                         // Acceso solo para admin a /admin/**
                         .requestMatchers("/admin/**").hasRole("ADMIN")

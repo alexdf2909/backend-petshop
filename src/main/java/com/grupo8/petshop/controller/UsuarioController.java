@@ -47,6 +47,7 @@ public class UsuarioController {
     @PutMapping("/{id}")
     public ResponseEntity<String> actualizarUsuario(@PathVariable Long id, @RequestBody UsuarioDTO usuarioDTO) {
         try {
+            System.out.println("controlador");
             usuarioService.updateUsuario(id, usuarioDTO);
             return ResponseEntity.ok("{\"message\": \"Usuario modificada\"}");
         } catch (RuntimeException e) {

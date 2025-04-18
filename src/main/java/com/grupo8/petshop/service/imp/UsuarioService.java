@@ -6,6 +6,7 @@ import com.grupo8.petshop.entity.Producto;
 import com.grupo8.petshop.entity.Usuario;
 import com.grupo8.petshop.repository.IProductoRepository;
 import com.grupo8.petshop.repository.IUsuarioRepository;
+import com.grupo8.petshop.service.IAuthService;
 import com.grupo8.petshop.service.IUsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -24,6 +25,8 @@ public class UsuarioService implements IUsuarioService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private IProductoRepository productoRepository;
+    @Autowired
+    private IAuthService authService;
 
     public UsuarioService(IUsuarioRepository usuarioRepository) {
         this.usuarioRepository = usuarioRepository;
@@ -46,11 +49,13 @@ public class UsuarioService implements IUsuarioService {
         usuario.setDeleted(false);
 
         if (usuarioDTO.getFavoritos() != null) {
-            usuarioDTO.getFavoritos().forEach(varianteDTO -> {
-                Optional<Producto> productoOpt = productoRepository.findById(varianteDTO.getProductoId());
+            usuarioDTO.getFavoritos().forEach(productoDTO -> {
+                Optional<Producto> productoOpt = productoRepository.findById(productoDTO.getProductoId());
                 productoOpt.ifPresent(usuario.getFavoritos()::add);
             });
         }
+
+        authService.enviarCorreo(usuario.getCorreo(), codigo);
 
         return usuarioRepository.save(usuario);
     }
@@ -67,8 +72,10 @@ public class UsuarioService implements IUsuarioService {
 
     @Override
     public void updateUsuario(Long id, UsuarioDTO usuarioDTO) {
+        System.out.println("servicio");
         Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
         if (usuarioOpt.isEmpty()) {
+            System.out.println("No se encontró usuario con ID: " + id);
             throw new RuntimeException("Usuario no encontrado");
         }
 
@@ -76,33 +83,23 @@ public class UsuarioService implements IUsuarioService {
 
         if (usuarioDTO.getNombre() != null && !usuarioDTO.getNombre().isEmpty()) {
             usuario.setNombre(usuarioDTO.getNombre());
+            System.out.println("nombre");
         }
+
         if (usuarioDTO.getCorreo() != null && !usuarioDTO.getCorreo().isEmpty()) {
-            if (usuarioRepository.existsByCorreo(usuarioDTO.getCorreo()))
-                throw new RuntimeException("Correo ya registrado");
             usuario.setCorreo(usuarioDTO.getCorreo());
         }
+
         if (usuarioDTO.getRol() != null) {
             usuario.setRol(usuarioDTO.getRol());
+            System.out.println("rol");
         }
-        if (usuarioDTO.getContrasena() != null && !usuarioDTO.getContrasena().isEmpty()) {
-            usuario.setContrasena(passwordEncoder.encode(usuarioDTO.getContrasena()));
-        }
-        if (usuarioDTO.getVerificado() != null) {
-            usuario.setVerificado(usuarioDTO.getVerificado());
-        }
-        if (usuarioDTO.getCodigoVerificacion() != null && !usuarioDTO.getCodigoVerificacion().isEmpty()) {
-            String codigo = String.format("%06d", new Random().nextInt(999999));
-            usuario.setCodigoVerificacion(codigo);
-        }
-        if (usuarioDTO.getFavoritos() != null) {
-            usuario.getFavoritos().clear();
-            usuarioDTO.getFavoritos().forEach(productoDTO -> {
-                Optional<Producto> productoOpt = productoRepository.findById(productoDTO.getProductoId());
-                productoOpt.ifPresent(usuario.getFavoritos()::add);
-            });
-        }
+
         usuario.setDeleted(usuarioDTO.isDeleted());
+        System.out.println(usuarioDTO.isDeleted());
+        System.out.println(usuario.isDeleted());
+
+        System.out.println(usuario);
 
         usuarioRepository.save(usuario);
     }

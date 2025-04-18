@@ -31,20 +31,31 @@ public class VarianteService implements IVarianteService {
 
     @Override
     public Variante createVariante(VarianteDTO varianteDTO) {
-        Color color = colorRepository.findById(varianteDTO.getColorId())
-                .orElseThrow(() -> new RuntimeException("Color no encontrada"));
-        Talla talla = tallaRepository.findById(varianteDTO.getTallaId())
-                .orElseThrow(() -> new RuntimeException("Talla no encontrada"));
-        Peso peso = pesoRepository.findById(varianteDTO.getPesoId())
-                .orElseThrow(() -> new RuntimeException("Peso no encontrada"));
+
+        Variante variante = new Variante();
+        variante.setPeso(null);
+        variante.setTalla(null);
+        variante.setColor(null);
+        if (varianteDTO.getPesoId() != null) {
+            Peso peso = pesoRepository.findById(varianteDTO.getPesoId())
+                    .orElseThrow(() -> new RuntimeException("Peso no encontrada"));
+            variante.setPeso(peso);
+        }
+        if (varianteDTO.getTallaId() != null) {
+            Talla talla = tallaRepository.findById(varianteDTO.getTallaId())
+                    .orElseThrow(() -> new RuntimeException("Talla no encontrada"));
+            variante.setTalla(talla);
+        }
+        if (varianteDTO.getColorId() != null) {
+            Color color = colorRepository.findById(varianteDTO.getColorId())
+                    .orElseThrow(() -> new RuntimeException("Color no encontrada"));
+            variante.setColor(color);
+        }
         Producto producto = productoRepository.findById(varianteDTO.getProductoId())
                 .orElseThrow(() -> new RuntimeException("Producto no encontrada"));
 
-        Variante variante = new Variante();
+
         variante.setDeleted(false);
-        variante.setPeso(peso);
-        variante.setColor(color);
-        variante.setTalla(talla);
         variante.setProducto(producto);
         variante.setPrecioOferta(varianteDTO.getPrecioOferta());
         variante.setPrecioOriginal(varianteDTO.getPrecioOriginal());
@@ -150,7 +161,7 @@ public class VarianteService implements IVarianteService {
         // Guardar los cambios en las prendas
         loteRepository.saveAll(lotesWithVariante);
         // Eliminar la categoría
-        varianteRepository.delete(variante);
+        variante.setDeleted(true);
     }
 
     private VarianteDTO convertToDTO(Variante variante) {

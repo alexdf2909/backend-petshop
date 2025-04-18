@@ -6,6 +6,7 @@ import com.grupo8.petshop.dto.VerificationRequest;
 import com.grupo8.petshop.entity.Usuario;
 import com.grupo8.petshop.repository.IUsuarioRepository;
 import com.grupo8.petshop.security.JwtUtil;
+import com.grupo8.petshop.service.IAuthService;
 import com.grupo8.petshop.util.Rol;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
@@ -17,7 +18,7 @@ import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
-public class AuthService {
+public class AuthService implements IAuthService {
 
     private final IUsuarioRepository IUsuarioRepository;
     private final PasswordEncoder passwordEncoder;
@@ -70,7 +71,7 @@ public class AuthService {
         IUsuarioRepository.save(usuario);
     }
 
-    private void enviarCorreo(String destino, String codigo) {
+    public void enviarCorreo(String destino, String codigo) {
         SimpleMailMessage mensaje = new SimpleMailMessage();
         mensaje.setTo(destino);
         mensaje.setSubject("Código de verificación");

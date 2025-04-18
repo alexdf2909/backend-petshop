@@ -33,4 +33,7 @@ public class Compra {
     @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
+
+    @Column(nullable = false, columnDefinition = "TINYINT(1)")
+    private boolean isDeleted;
 }

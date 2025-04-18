@@ -135,7 +135,7 @@ public class ProductoService implements IProductoService {
         // Guardar los cambios en las prendas
         varianteRepository.saveAll(variantesWithProducto);
         // Eliminar la categoría
-        productoRepository.delete(producto);
+        producto.setDeleted(true);
     }
 
     @Override

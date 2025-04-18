@@ -23,4 +23,6 @@ public class CompraDTO {
     private LocalDate fechaRegistro;
 
     private Long usuarioId;
+
+    private boolean isDeleted;
 }
