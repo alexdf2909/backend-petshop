@@ -56,7 +56,7 @@ public class AuthService implements IAuthService {
         if (!usuario.getVerificado())
             throw new RuntimeException("Cuenta no verificada");
 
-        return jwtUtil.generateToken(usuario.getCorreo(), usuario.getRol().toString());
+        return jwtUtil.generateToken(usuario.getUsuarioId(), usuario.getNombre(), usuario.getCorreo(), usuario.getRol().toString());
     }
 
     public void verificar(VerificationRequest request) {

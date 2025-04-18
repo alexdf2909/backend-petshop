@@ -18,9 +18,11 @@ public class JwtUtil {
     @Value("${jwt.secret}")
     private String secret;
 
-    public String generateToken(String correo, String rol) {
+    public String generateToken(Long usuarioId, String nombre,String correo, String rol) {
         return JWT.create()
                 .withSubject(correo)
+                .withClaim("id", usuarioId)
+                .withClaim("nombre", nombre)
                 .withClaim("rol", rol)
                 .withIssuedAt(new Date())
                 .withExpiresAt(Date.from(Instant.now().plus(1, ChronoUnit.DAYS)))
