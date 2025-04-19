@@ -111,16 +111,22 @@ public class VarianteService implements IVarianteService {
             Peso peso = pesoRepository.findById(varianteDTO.getPesoId())
                     .orElseThrow(() -> new RuntimeException("Peso no encontrada"));
             variante.setPeso(peso);
+        }else{
+            variante.setPeso(null);
         }
         if (varianteDTO.getTallaId() != null) {
             Talla talla = tallaRepository.findById(varianteDTO.getTallaId())
                     .orElseThrow(() -> new RuntimeException("Talla no encontrada"));
             variante.setTalla(talla);
+        }else{
+            variante.setTalla(null);
         }
         if (varianteDTO.getColorId() != null) {
             Color color = colorRepository.findById(varianteDTO.getColorId())
                     .orElseThrow(() -> new RuntimeException("Color no encontrada"));
             variante.setColor(color);
+        }else{
+            variante.setColor(null);
         }
         if (varianteDTO.getPrecioOferta() > 0.0) {
             variante.setPrecioOferta(varianteDTO.getPrecioOferta());
@@ -133,11 +139,20 @@ public class VarianteService implements IVarianteService {
         }
 
         if (varianteDTO.getImagenes() != null) {
-            variante.getImagenes().clear();
+            // Mantener las imágenes previas que no han cambiado
+            List<String> existingImageUrls = variante.getImagenes().stream()
+                    .map(Imagen::getImagenUrl)
+                    .collect(Collectors.toList());
+
+            variante.getImagenes().clear();  // Limpiar las imágenes previas para agregar las nuevas
+
             varianteDTO.getImagenes().forEach(imageUrl -> {
-                Imagen image = new Imagen();
-                image.setImagenUrl(imageUrl);
-                variante.getImagenes().add(image);
+                // Verificar si la imagen ya está registrada
+                if (!existingImageUrls.contains(imageUrl)) {
+                    Imagen image = new Imagen();
+                    image.setImagenUrl(imageUrl);
+                    variante.getImagenes().add(image);
+                }
             });
         }
 
