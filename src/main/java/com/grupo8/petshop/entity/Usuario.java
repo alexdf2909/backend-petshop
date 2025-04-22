@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -40,6 +42,12 @@ public class Usuario {
 
     @Column(nullable = false)
     private Boolean verificado = false;
+
+    @Column(nullable = true)
+    private String refreshToken;
+
+    @Column(nullable = true)
+    private Date refreshTokenExpiry;
 
     @ManyToMany
     @JoinTable(

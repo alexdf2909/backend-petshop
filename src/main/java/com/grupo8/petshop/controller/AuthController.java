@@ -1,8 +1,7 @@
 package com.grupo8.petshop.controller;
 
-import com.grupo8.petshop.dto.LoginRequest;
-import com.grupo8.petshop.dto.RegisterRequest;
-import com.grupo8.petshop.dto.VerificationRequest;
+import com.grupo8.petshop.dto.auth.*;
+import com.grupo8.petshop.entity.Usuario;
 import com.grupo8.petshop.service.imp.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +26,8 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        String token = authService.login(request);
-        return ResponseEntity.ok(Collections.singletonMap("token", token));
+        LoginResponse response = authService.login(request);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/verificar")
@@ -36,4 +35,11 @@ public class AuthController {
         authService.verificar(request);
         return ResponseEntity.ok("Cuenta verificada.");
     }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<LoginResponse> refreshToken(@RequestBody RefreshTokenRequest request) {
+        LoginResponse response = authService.refreshToken(request.getRefreshToken());
+        return ResponseEntity.ok(response);
+    }
+
 }

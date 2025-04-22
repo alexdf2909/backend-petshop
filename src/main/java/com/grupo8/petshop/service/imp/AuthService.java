@@ -1,8 +1,9 @@
 package com.grupo8.petshop.service.imp;
 
-import com.grupo8.petshop.dto.LoginRequest;
-import com.grupo8.petshop.dto.RegisterRequest;
-import com.grupo8.petshop.dto.VerificationRequest;
+import com.grupo8.petshop.dto.auth.LoginRequest;
+import com.grupo8.petshop.dto.auth.LoginResponse;
+import com.grupo8.petshop.dto.auth.RegisterRequest;
+import com.grupo8.petshop.dto.auth.VerificationRequest;
 import com.grupo8.petshop.entity.Usuario;
 import com.grupo8.petshop.repository.IUsuarioRepository;
 import com.grupo8.petshop.security.JwtUtil;
@@ -46,7 +47,7 @@ public class AuthService implements IAuthService {
         enviarCorreo(usuario.getCorreo(), codigo);
     }
 
-    public String login(LoginRequest request) {
+    public LoginResponse login(LoginRequest request) {
         Usuario usuario = IUsuarioRepository.findByCorreo(request.getCorreo())
                 .orElseThrow(() -> new RuntimeException("Credenciales inválidas"));
 
@@ -56,7 +57,14 @@ public class AuthService implements IAuthService {
         if (!usuario.getVerificado())
             throw new RuntimeException("Cuenta no verificada");
 
-        return jwtUtil.generateToken(usuario.getUsuarioId(), usuario.getNombre(), usuario.getCorreo(), usuario.getRol().toString());
+        String accessToken = jwtUtil.generateAccessToken(usuario.getUsuarioId(), usuario.getNombre(), usuario.getCorreo(), usuario.getRol().toString());
+        String refreshToken = jwtUtil.generateRefreshToken(usuario.getCorreo(), usuario);
+
+        // Opcional: guardar refreshToken en la DB
+        usuario.setRefreshToken(refreshToken);
+        IUsuarioRepository.save(usuario);
+
+        return new LoginResponse(accessToken, refreshToken);
     }
 
     public void verificar(VerificationRequest request) {
@@ -69,6 +77,32 @@ public class AuthService implements IAuthService {
         usuario.setVerificado(true);
         usuario.setCodigoVerificacion(null);
         IUsuarioRepository.save(usuario);
+    }
+
+    public LoginResponse refreshToken(String refreshToken) {
+        String correo = jwtUtil.getCorreo(refreshToken);
+
+        Usuario usuario = IUsuarioRepository.findByCorreo(correo)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        // Verificar si el refresh token es válido
+        if (!refreshToken.equals(usuario.getRefreshToken())) {
+            throw new RuntimeException("Refresh token inválido o expirado");
+        }
+
+        // Verificar si ha expirado el refresh token
+        if (jwtUtil.isRefreshTokenExpired(usuario)) {
+            throw new RuntimeException("Refresh token ha expirado");
+        }
+
+        String newAccessToken = jwtUtil.generateAccessToken(
+                usuario.getUsuarioId(),
+                usuario.getNombre(),
+                usuario.getCorreo(),
+                usuario.getRol().toString()
+        );
+
+        return new LoginResponse(newAccessToken, refreshToken);
     }
 
     public void enviarCorreo(String destino, String codigo) {
