@@ -1,6 +1,6 @@
 package com.grupo8.petshop.controller;
 
-import com.grupo8.petshop.dto.VarianteDTO;
+import com.grupo8.petshop.dto.entidades.VarianteDTO;
 import com.grupo8.petshop.entity.Variante;
 import com.grupo8.petshop.service.IVarianteService;
 import org.springframework.http.HttpStatus;

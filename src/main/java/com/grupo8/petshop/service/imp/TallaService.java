@@ -1,6 +1,6 @@
 package com.grupo8.petshop.service.imp;
 
-import com.grupo8.petshop.dto.TallaDTO;
+import com.grupo8.petshop.dto.entidades.TallaDTO;
 import com.grupo8.petshop.entity.Talla;
 import com.grupo8.petshop.entity.Variante;
 import com.grupo8.petshop.repository.ITallaRepository;
@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class TallaService implements ITallaService {

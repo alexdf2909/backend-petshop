@@ -1,4 +1,4 @@
-package com.grupo8.petshop.dto;
+package com.grupo8.petshop.dto.entidades;
 
 
 import com.grupo8.petshop.util.Rol;
@@ -7,7 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Timestamp;
 import java.util.Set;
 @Getter
 @Setter

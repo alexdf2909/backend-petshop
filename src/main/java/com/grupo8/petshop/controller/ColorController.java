@@ -1,6 +1,6 @@
 package com.grupo8.petshop.controller;
 
-import com.grupo8.petshop.dto.ColorDTO;
+import com.grupo8.petshop.dto.entidades.ColorDTO;
 import com.grupo8.petshop.entity.Color;
 import com.grupo8.petshop.service.IColorService;
 import org.springframework.http.HttpStatus;

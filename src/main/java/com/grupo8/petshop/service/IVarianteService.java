@@ -1,7 +1,6 @@
 package com.grupo8.petshop.service;
 
-import com.grupo8.petshop.dto.VarianteDTO;
-import com.grupo8.petshop.entity.Lote;
+import com.grupo8.petshop.dto.entidades.VarianteDTO;
 import com.grupo8.petshop.entity.Variante;
 
 import java.util.List;

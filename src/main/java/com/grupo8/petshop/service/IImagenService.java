@@ -1,6 +1,6 @@
 package com.grupo8.petshop.service;
 
-import com.grupo8.petshop.dto.ImagenDTO;
+import com.grupo8.petshop.dto.entidades.ImagenDTO;
 import com.grupo8.petshop.entity.Imagen;
 
 import java.util.List;

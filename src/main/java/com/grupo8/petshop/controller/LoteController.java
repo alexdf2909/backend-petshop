@@ -1,8 +1,7 @@
 package com.grupo8.petshop.controller;
 
-import com.grupo8.petshop.dto.LoteDTO;
+import com.grupo8.petshop.dto.entidades.LoteDTO;
 import com.grupo8.petshop.entity.Lote;
-import com.grupo8.petshop.entity.Variante;
 import com.grupo8.petshop.service.ILoteService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

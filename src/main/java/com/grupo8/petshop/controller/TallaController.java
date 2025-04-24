@@ -1,6 +1,6 @@
 package com.grupo8.petshop.controller;
 
-import com.grupo8.petshop.dto.TallaDTO;
+import com.grupo8.petshop.dto.entidades.TallaDTO;
 import com.grupo8.petshop.entity.Talla;
 import com.grupo8.petshop.service.ITallaService;
 import org.springframework.http.HttpStatus;

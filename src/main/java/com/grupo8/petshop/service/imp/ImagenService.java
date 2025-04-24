@@ -1,6 +1,6 @@
 package com.grupo8.petshop.service.imp;
 
-import com.grupo8.petshop.dto.ImagenDTO;
+import com.grupo8.petshop.dto.entidades.ImagenDTO;
 import com.grupo8.petshop.entity.Imagen;
 import com.grupo8.petshop.repository.IImagenRepository;
 import com.grupo8.petshop.service.IImagenService;
@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ImagenService implements IImagenService {

@@ -1,6 +1,6 @@
 package com.grupo8.petshop.service.imp;
 
-import com.grupo8.petshop.dto.MarcaDTO;
+import com.grupo8.petshop.dto.entidades.MarcaDTO;
 import com.grupo8.petshop.entity.Marca;
 import com.grupo8.petshop.entity.Producto;
 import com.grupo8.petshop.repository.IMarcaRepository;
@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class MarcaService implements IMarcaService {

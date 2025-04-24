@@ -1,6 +1,6 @@
 package com.grupo8.petshop.service.imp;
 
-import com.grupo8.petshop.dto.ProductoDTO;
+import com.grupo8.petshop.dto.entidades.ProductoDTO;
 import com.grupo8.petshop.entity.*;
 import com.grupo8.petshop.repository.*;
 import com.grupo8.petshop.service.IProductoService;

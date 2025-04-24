@@ -1,6 +1,6 @@
 package com.grupo8.petshop.controller;
 
-import com.grupo8.petshop.dto.PesoDTO;
+import com.grupo8.petshop.dto.entidades.PesoDTO;
 import com.grupo8.petshop.entity.Peso;
 import com.grupo8.petshop.service.IPesoService;
 import org.springframework.http.HttpStatus;

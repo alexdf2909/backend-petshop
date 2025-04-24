@@ -1,6 +1,6 @@
 package com.grupo8.petshop.controller;
 
-import com.grupo8.petshop.dto.MarcaDTO;
+import com.grupo8.petshop.dto.entidades.MarcaDTO;
 import com.grupo8.petshop.entity.Marca;
 import com.grupo8.petshop.service.IMarcaService;
 import org.springframework.http.HttpStatus;

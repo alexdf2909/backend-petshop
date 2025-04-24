@@ -1,4 +1,4 @@
-package com.grupo8.petshop.dto;
+package com.grupo8.petshop.dto.entidades;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,11 +9,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class EspecieDTO {
+public class TallaDTO {
 
-    private Long especieId;
+    private Long tallaId;
 
-    private String nombre;
-
-    private String imagenUrl;
+    private String valor;
 }

@@ -1,6 +1,6 @@
 package com.grupo8.petshop.controller;
 
-import com.grupo8.petshop.dto.EspecieDTO;
+import com.grupo8.petshop.dto.entidades.EspecieDTO;
 import com.grupo8.petshop.entity.Especie;
 import com.grupo8.petshop.service.IEspecieService;
 import org.springframework.http.HttpStatus;

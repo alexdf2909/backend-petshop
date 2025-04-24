@@ -1,6 +1,6 @@
 package com.grupo8.petshop.service.imp;
 
-import com.grupo8.petshop.dto.ServicioDTO;
+import com.grupo8.petshop.dto.entidades.ServicioDTO;
 import com.grupo8.petshop.entity.Servicio;
 import com.grupo8.petshop.repository.IServicioRepository;
 import com.grupo8.petshop.service.IServicioService;
@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ServicioService implements IServicioService {
