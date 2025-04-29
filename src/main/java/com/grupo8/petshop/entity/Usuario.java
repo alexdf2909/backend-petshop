@@ -49,6 +49,12 @@ public class Usuario {
     @Column(nullable = true)
     private Date refreshTokenExpiry;
 
+    @Column(name = "imagen_perfil")
+    private String imagenPerfil;
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Mascota> mascotas;
+
     @ManyToMany
     @JoinTable(
             name = "usuario_favorito",
