@@ -4,18 +4,18 @@ import com.mercadopago.client.preference.PreferenceClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import com.mercadopago.MercadoPagoConfig;
+
 
 @Configuration
-public class MercadoPagoConfig {
+public class MercadoPagoConfiguration {
 
     @Value("${mercadopago.access.token}")
     private String accessToken; // Obtiene el token de acceso desde application.properties
 
     @Bean
     public PreferenceClient preferenceClient() {
-        // Configuración del SDK de Mercado Pago
-        System.setProperty("mercadopago.access.token", accessToken); // Configura el token de acceso
-
+        MercadoPagoConfig.setAccessToken(accessToken); // Ahora sí funciona
         return new PreferenceClient();
     }
 }

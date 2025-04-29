@@ -19,22 +19,22 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class PaymentService {
-    @Autowired
-    private IVarianteRepository varianteRepository;
+
+    private final IVarianteRepository varianteRepository;
     private final PreferenceClient preferenceClient;
 
     public String crearPreferencia(List<CartItemDTO> carrito) throws Exception {
 
         List<PreferenceItemRequest> items = carrito.stream().map(item -> {
             Variante variante = varianteRepository.findById(item.getVarianteId())
-                    .orElseThrow(() -> new RuntimeException("Variante no encontrada: " + item.getVarianteId()));
+                    .orElseThrow(() -> new IllegalArgumentException("Variante no encontrada: " + item.getVarianteId()));
 
             return PreferenceItemRequest.builder()
                     .id(variante.getVarianteId().toString())
                     .title(variante.getProducto().getNombre())
                     .quantity(item.getCantidad())
                     .unitPrice(BigDecimal.valueOf(variante.getPrecioOferta()))
-                    .currencyId("PER") // o "USD", según corresponda
+                    .currencyId("PEN") // o "USD", según corresponda
                     .build();
         }).collect(Collectors.toList());
 

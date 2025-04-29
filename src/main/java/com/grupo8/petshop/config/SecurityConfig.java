@@ -39,6 +39,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/servicio/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/talla/**").permitAll()
 
+                        .requestMatchers(HttpMethod.POST, "/pago/**").hasRole("CLIENTE")
+
                         // Solo ADMIN puede usar POST, PUT, DELETE en /producto/**
                         .requestMatchers(HttpMethod.POST, "/producto/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/producto/**").hasRole("ADMIN")
