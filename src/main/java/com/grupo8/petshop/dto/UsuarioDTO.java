@@ -37,6 +37,4 @@ public class UsuarioDTO {
 
     private String imagenPerfil;
 
-    private Set<Mascota> mascotas;
-
 }

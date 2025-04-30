@@ -16,4 +16,16 @@ public interface IProductoRepository extends JpaRepository<Producto, Long> {
     List<Producto> findByEtiquetasContaining(Etiqueta etiqueta);
     @Query("SELECT c FROM Producto c WHERE LOWER(c.nombre) LIKE LOWER(CONCAT('%', :nombre, '%')) AND c.isDeleted = false")
     List<Producto> findByNameContainingIgnoreCase(@Param("name") String name);
+    @Query("""
+        SELECT p FROM Producto p 
+        LEFT JOIN p.etiquetas e 
+        WHERE LOWER(p.especie.nombre) = LOWER(:especieNombre)
+        AND p.isDeleted = false
+        GROUP BY p
+        ORDER BY 
+            COUNT(CASE WHEN LOWER(e.nombre) IN :etiquetas THEN 1 END) DESC
+        """)
+    List<Producto> findRecomendadosPorEspecieYEtiquetas(String especieNombre, List<String> etiquetas);
+
+
 }

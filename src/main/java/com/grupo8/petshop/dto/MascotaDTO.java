@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDate;
 import java.util.Date;
 
 @Getter
@@ -20,11 +22,17 @@ public class MascotaDTO {
 
     private String nombre;
 
-    private Date fechaNacimiento;
+    private LocalDate fechaNacimiento;
 
-    private Raza raza;
+    private Long especieId;
 
-    private Usuario usuario;
+    private Long razaId;
 
+    private String sexo;
 
+    private String imagenUrl;
+
+    private float peso;
+
+    private Long usuarioId;
 }

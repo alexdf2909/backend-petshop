@@ -3,33 +3,47 @@ package com.grupo8.petshop.entity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Entity
-@Table(name = "Mascota")
+@Data
+@Table(name = "MASCOTA")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
 public class Mascota {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "mascota_id")
     private Long mascotaId;
 
     @Column(nullable = false)
     private String nombre;
 
     @Column(nullable = false)
-    private String fechaNacimiento;
+    private LocalDate fechaNacimiento;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "raza_id", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "especie_id", nullable = false)
+    private Especie especie;
+
+    @ManyToOne
+    @JoinColumn(name = "raza_id", nullable = true)
     private Raza raza;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Column(nullable = false)
+    private String sexo;
+
+    @Column(nullable = false)
+    private String imagenUrl;
+
+    @Column(nullable = false)
+    private float peso;
+
+    @ManyToOne
     @JoinColumn(name = "usuario_id", nullable = false)
     private Usuario usuario;
-
 }

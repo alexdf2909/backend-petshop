@@ -18,6 +18,5 @@ public class RazaDTO {
 
     private String nombre;
 
-    private List<Mascota> mascotas;
-
+    private Long especieId;
 }

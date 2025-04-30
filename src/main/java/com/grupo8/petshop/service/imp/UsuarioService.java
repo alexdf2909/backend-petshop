@@ -17,6 +17,8 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.Authentication;
 
 @Service
 public class UsuarioService implements IUsuarioService {
@@ -47,6 +49,7 @@ public class UsuarioService implements IUsuarioService {
         usuario.setCodigoVerificacion(codigo);
         usuario.setVerificado(false);
         usuario.setDeleted(false);
+        usuario.setImagenPerfil(usuarioDTO.getImagenPerfil());
 
         if (usuarioDTO.getFavoritos() != null) {
             usuarioDTO.getFavoritos().forEach(productoDTO -> {
@@ -72,10 +75,8 @@ public class UsuarioService implements IUsuarioService {
 
     @Override
     public void updateUsuario(Long id, UsuarioDTO usuarioDTO) {
-        System.out.println("servicio");
         Optional<Usuario> usuarioOpt = usuarioRepository.findById(id);
         if (usuarioOpt.isEmpty()) {
-            System.out.println("No se encontró usuario con ID: " + id);
             throw new RuntimeException("Usuario no encontrado");
         }
 
@@ -83,7 +84,6 @@ public class UsuarioService implements IUsuarioService {
 
         if (usuarioDTO.getNombre() != null && !usuarioDTO.getNombre().isEmpty()) {
             usuario.setNombre(usuarioDTO.getNombre());
-            System.out.println("nombre");
         }
 
         if (usuarioDTO.getCorreo() != null && !usuarioDTO.getCorreo().isEmpty()) {
@@ -92,14 +92,13 @@ public class UsuarioService implements IUsuarioService {
 
         if (usuarioDTO.getRol() != null) {
             usuario.setRol(usuarioDTO.getRol());
-            System.out.println("rol");
         }
 
         usuario.setDeleted(usuarioDTO.isDeleted());
-        System.out.println(usuarioDTO.isDeleted());
-        System.out.println(usuario.isDeleted());
 
-        System.out.println(usuario);
+        if (usuarioDTO.getImagenPerfil() != null && !usuarioDTO.getImagenPerfil().isEmpty()) {
+            usuario.setImagenPerfil(usuarioDTO.getImagenPerfil());
+        }
 
         usuarioRepository.save(usuario);
     }
@@ -179,7 +178,43 @@ public class UsuarioService implements IUsuarioService {
                 usuario.getCodigoVerificacion(),
                 usuario.getVerificado(),
                 favoritoDTO,
-                usuario.isDeleted()
+                usuario.isDeleted(),
+                usuario.getImagenPerfil()
         );
+    }
+    // Obtener el correo del usuario autenticado
+    private String getCorreoUsuarioAutenticado() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication.getName(); // El 'correo' fue puesto como subject en el JWT
+    }
+
+    // Obtener el usuario autenticado completo
+    private Usuario getUsuarioAutenticado() {
+        String correo = getCorreoUsuarioAutenticado();
+        return usuarioRepository.findByCorreo(correo)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    }
+
+    // Obtener el perfil del cliente autenticado
+    @Override
+    public Optional<Usuario> getPerfilCliente() {
+        Usuario usuario = getUsuarioAutenticado();
+        return Optional.of(usuario);
+    }
+
+    // Actualizar el perfil del cliente autenticado
+    @Override
+    public Usuario actualizarPerfilCliente(Usuario usuarioActualizado) {
+        Usuario usuarioAutenticado = getUsuarioAutenticado();
+
+        if (usuarioActualizado.getNombre() != null && !usuarioActualizado.getNombre().isEmpty()) {
+            usuarioAutenticado.setNombre(usuarioActualizado.getNombre());
+        }
+        if (usuarioActualizado.getImagenPerfil() != null && !usuarioActualizado.getImagenPerfil().isEmpty()) {
+            usuarioAutenticado.setImagenPerfil(usuarioActualizado.getImagenPerfil());
+        }
+
+        // Guardar el usuario actualizado
+        return usuarioRepository.save(usuarioAutenticado);
     }
 }

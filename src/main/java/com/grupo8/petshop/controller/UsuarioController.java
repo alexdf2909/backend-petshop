@@ -87,4 +87,23 @@ public class UsuarioController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
+
+    // Endpoint para ver el perfil del cliente autenticado
+    @GetMapping("/perfil")
+    public ResponseEntity<Usuario> obtenerPerfilCliente() {
+        return usuarioService.getPerfilCliente()
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    // Endpoint para editar el perfil del cliente autenticado
+    @PutMapping("/perfil")
+    public ResponseEntity<Usuario> editarPerfilCliente(@RequestBody Usuario usuarioActualizado) {
+        try {
+            Usuario usuario = usuarioService.actualizarPerfilCliente(usuarioActualizado);
+            return ResponseEntity.ok(usuario);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
 }

@@ -109,9 +109,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/usuario/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/usuario/**").hasRole("ADMIN")
 
+                        .requestMatchers(HttpMethod.POST, "/raza/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/raza/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/raza/**").hasRole("ADMIN")
 
-                        // Acceso solo para admin a /admin/**
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
 
                         // Todo lo demás requiere autenticación
                         .anyRequest().permitAll()
