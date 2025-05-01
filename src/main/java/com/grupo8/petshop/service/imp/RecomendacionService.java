@@ -37,41 +37,49 @@ public class RecomendacionService implements IRecomendacionService {
         etiquetas.add(especieNombre); // ejemplo: "perro", "gato", etc.
 
         // Edad
-        int edad = Period.between(mascota.getFechaNacimiento(), LocalDate.now()).getYears();
+        LocalDate fechaNacimiento = mascota.getFechaNacimiento();
         Integer edadCachorro = mascota.getEspecie().getEdadCachorro();
         Integer edadAdulto = mascota.getEspecie().getEdadAdulto();
 
-        if (edadCachorro != null && edad < edadCachorro) {
-            etiquetas.add("cachorro");
-        } else if (edadAdulto != null && edad < edadAdulto) {
-            etiquetas.add("adulto");
-        } else {
-            etiquetas.add("senior");
+        if (fechaNacimiento != null && edadCachorro != null && edadAdulto != null) {
+            int edad = Period.between(fechaNacimiento, LocalDate.now()).getYears();
+            if (edad < edadCachorro) {
+                etiquetas.add("cachorro");
+            } else if (edad < edadAdulto) {
+                etiquetas.add("adulto");
+            } else {
+                etiquetas.add("senior");
+            }
         }
 
         // Peso
-        float peso = mascota.getPeso();
+        Float peso = mascota.getPeso(); // Cambia a Float si originalmente era float para permitir null
         Float pesoPequeno = mascota.getEspecie().getPesoPequeno();
         Float pesoMediano = mascota.getEspecie().getPesoMediano();
 
-        if (pesoPequeno != null && peso < pesoPequeno) {
-            etiquetas.add("pequeño");
-        } else if (pesoMediano != null && peso < pesoMediano) {
-            etiquetas.add("mediano");
-        } else {
-            etiquetas.add("grande");
+        if (peso != null && pesoPequeno != null && pesoMediano != null) {
+            if (peso < pesoPequeno) {
+                etiquetas.add("pequeño");
+            } else if (peso < pesoMediano) {
+                etiquetas.add("mediano");
+            } else {
+                etiquetas.add("grande");
+            }
         }
 
         // Sexo
-        if (mascota.getSexo().equalsIgnoreCase("hembra")) {
-            etiquetas.add("hembra");
-        } else {
-            etiquetas.add("macho");
+        String sexo = mascota.getSexo();
+        if (sexo != null) {
+            if (sexo.equalsIgnoreCase("hembra")) {
+                etiquetas.add("hembra");
+            } else {
+                etiquetas.add("macho");
+            }
         }
-
 
         System.out.println(etiquetas);
 
         return etiquetas;
     }
+
 }
