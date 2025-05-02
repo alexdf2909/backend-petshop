@@ -9,6 +9,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CartItemDTO {
-    private Long varianteId;
     private int cantidad;
+    private String imagen;
+    private String nombre;
+    private float precioUnitario;
+    private Long productoId;
+    private Long varianteId;
 }

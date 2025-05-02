@@ -1,8 +1,14 @@
 package com.grupo8.petshop.service.imp;
 
+import com.grupo8.petshop.dto.utils.PaymentFormDTO;
+import com.mercadopago.client.common.IdentificationRequest;
+import com.mercadopago.client.payment.PaymentClient;
+import com.mercadopago.client.payment.PaymentCreateRequest;
+import com.mercadopago.client.payment.PaymentPayerRequest;
 import com.mercadopago.client.preference.PreferenceClient;
 import com.mercadopago.client.preference.PreferenceItemRequest;
 import com.mercadopago.client.preference.PreferenceRequest;
+import com.mercadopago.resources.payment.Payment;
 import com.mercadopago.resources.preference.Preference;
 import com.grupo8.petshop.dto.utils.CartItemDTO;
 import com.grupo8.petshop.entity.Variante;
@@ -31,7 +37,7 @@ public class PaymentService {
 
             return PreferenceItemRequest.builder()
                     .id(variante.getVarianteId().toString())
-                    .title(variante.getProducto().getNombre())
+                    .title(variante.getProducto().getNombre() + " " + variante.getPeso() + " " + variante.getColor() + " " + variante.getTalla())
                     .quantity(item.getCantidad())
                     .unitPrice(BigDecimal.valueOf(variante.getPrecioOferta()))
                     .currencyId("PEN") // o "USD", según corresponda
@@ -45,5 +51,30 @@ public class PaymentService {
         Preference preference = preferenceClient.create(preferenceRequest);
 
         return preference.getId();
+    }
+    public String procesarPago(PaymentFormDTO request) throws Exception {
+        PaymentClient client = new PaymentClient();
+
+        PaymentCreateRequest paymentCreateRequest =
+                PaymentCreateRequest.builder()
+                        .transactionAmount(request.getTransaction_amount())
+                        .token(request.getToken())
+                        .installments(request.getInstallments())
+                        .paymentMethodId(request.getPayment_method_id())
+                        .issuerId(request.getIssuer_id()) // si es requerido
+                        .payer(
+                                PaymentPayerRequest.builder()
+                                        .email(request.getPayer().getEmail())
+                                        .identification(
+                                                IdentificationRequest.builder()
+                                                        .type(request.getPayer().getIdentification().getType())
+                                                        .number(request.getPayer().getIdentification().getNumber())
+                                                        .build())
+                                        .build())
+                        .build();
+
+        Payment payment = client.create(paymentCreateRequest);
+
+        return payment.getStatus(); // o lo que desees retornar
     }
 }
