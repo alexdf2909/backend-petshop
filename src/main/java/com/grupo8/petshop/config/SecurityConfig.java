@@ -104,6 +104,9 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/talla/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/talla/**").hasRole("ADMIN")
 
+                        // Permitir que cualquier usuario autenticado actualice su perfil
+                        .requestMatchers(HttpMethod.PUT, "/usuario/perfil").authenticated()
+
                         // Solo ADMIN puede usar POST, PUT, DELETE en /usuario/**
                         .requestMatchers(HttpMethod.POST, "/usuario/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/usuario/**").hasRole("ADMIN")
