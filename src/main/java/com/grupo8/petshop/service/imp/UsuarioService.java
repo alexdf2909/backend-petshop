@@ -58,7 +58,7 @@ public class UsuarioService implements IUsuarioService {
             });
         }
 
-        authService.enviarCorreo(usuario.getCorreo(), codigo);
+        authService.enviarCorreo(usuario, codigo);
 
         return usuarioRepository.save(usuario);
     }

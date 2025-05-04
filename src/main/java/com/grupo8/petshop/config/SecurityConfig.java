@@ -113,6 +113,13 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/raza/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/raza/**").hasRole("ADMIN")
 
+                        // Solo ADMIN puede usar POST, PUT, DELETE en /producto/**
+                        .requestMatchers(HttpMethod.GET, "/mascota/**").hasAnyRole("ADMIN", "CLIENTE")
+                        .requestMatchers(HttpMethod.GET, "/recomendaciones/**").hasAnyRole("ADMIN", "CLIENTE")
+                        .requestMatchers(HttpMethod.POST, "/mascota/**").hasAnyRole("ADMIN", "CLIENTE")
+                        .requestMatchers(HttpMethod.PUT, "/mascota/**").hasAnyRole("ADMIN", "CLIENTE")
+                        .requestMatchers(HttpMethod.DELETE, "/mascota/**").hasAnyRole("ADMIN", "CLIENTE")
+
 
                         // Todo lo demás requiere autenticación
                         .anyRequest().permitAll()
