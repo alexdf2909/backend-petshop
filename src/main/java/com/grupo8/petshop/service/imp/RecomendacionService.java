@@ -27,7 +27,22 @@ public class RecomendacionService implements IRecomendacionService {
         List<String> etiquetas = generarEtiquetasDesdeMascota(mascota);
         String especieNombre = mascota.getEspecie().getNombre().toLowerCase();
 
-        return productoRepository.findRecomendadosPorEspecieYEtiquetas(especieNombre, etiquetas);
+        List<Producto> productos = productoRepository.findByEspecieNombreConEtiquetas(especieNombre);
+
+        return productos.stream()
+                .sorted((p1, p2) -> {
+                    long count1 = contarCoincidenciasParciales(p1, etiquetas);
+                    long count2 = contarCoincidenciasParciales(p2, etiquetas);
+                    return Long.compare(count2, count1); // descendente
+                })
+                .toList();
+    }
+
+    private long contarCoincidenciasParciales(Producto producto, List<String> etiquetas) {
+        return producto.getEtiquetas().stream()
+                .flatMap(et -> etiquetas.stream()
+                        .filter(f -> et.getNombre().toLowerCase().contains(f.toLowerCase())))
+                .count();
     }
 
     public List<String> generarEtiquetasDesdeMascota(Mascota mascota) {
@@ -60,8 +75,10 @@ public class RecomendacionService implements IRecomendacionService {
         if (peso != null && pesoPequeno != null && pesoMediano != null) {
             if (peso < pesoPequeno) {
                 etiquetas.add("pequeño");
+                etiquetas.add("pequeña");
             } else if (peso < pesoMediano) {
                 etiquetas.add("mediano");
+                etiquetas.add("mediana");
             } else {
                 etiquetas.add("grande");
             }
