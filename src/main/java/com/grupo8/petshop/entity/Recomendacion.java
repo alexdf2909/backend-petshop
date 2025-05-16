@@ -27,5 +27,5 @@ public class Recomendacion {
     private Producto producto;
 
     @Column(nullable = false)
-    private float score;
+    private float puntaje;
 }
