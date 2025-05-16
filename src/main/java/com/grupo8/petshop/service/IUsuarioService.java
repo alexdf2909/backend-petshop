@@ -14,4 +14,10 @@ public interface IUsuarioService {
     void deleteUsuario(Long id);
     Optional<Usuario> addFavorite(Long usuarioId, Long productoId);
     Optional<Usuario> removeFavorite(Long usuarioId, Long productoId);
+
+    // Obtener el perfil del cliente autenticado
+    Optional<Usuario> getPerfilCliente();
+
+    // Actualizar el perfil del cliente autenticado
+    Usuario actualizarPerfilCliente(Usuario usuarioActualizado);
 }

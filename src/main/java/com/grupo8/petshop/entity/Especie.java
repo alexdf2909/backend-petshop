@@ -19,4 +19,17 @@ public class Especie {
 
     @Column(nullable = false)
     private String imagenUrl;
+
+    @Column(nullable = true)
+    private Float pesoPequeno;
+
+    @Column(nullable = true)
+    private Float pesoMediano;
+
+    @Column(nullable = true)
+    private Integer edadCachorro;
+
+    @Column(nullable = true)
+    private Integer edadAdulto;
+
 }

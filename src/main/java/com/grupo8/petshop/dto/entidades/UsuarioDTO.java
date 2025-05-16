@@ -1,6 +1,7 @@
 package com.grupo8.petshop.dto.entidades;
 
 
+import com.grupo8.petshop.entity.Mascota;
 import com.grupo8.petshop.util.Rol;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,4 +33,7 @@ public class UsuarioDTO {
     private Set<ProductoDTO> favoritos;
 
     private boolean isDeleted;
+
+    private String imagenPerfil;
+
 }

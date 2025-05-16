@@ -106,14 +106,25 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.PUT, "/talla/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/talla/**").hasRole("ADMIN")
 
+                        // Permitir que cualquier usuario autenticado actualice su perfil
+                        .requestMatchers(HttpMethod.PUT, "/usuario/perfil").authenticated()
+
                         // Solo ADMIN puede usar POST, PUT, DELETE en /usuario/**
                         .requestMatchers(HttpMethod.POST, "/usuario/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/usuario/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/usuario/**").hasRole("ADMIN")
 
+                        .requestMatchers(HttpMethod.POST, "/raza/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/raza/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/raza/**").hasRole("ADMIN")
 
-                        // Acceso solo para admin a /admin/**
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        // Solo ADMIN puede usar POST, PUT, DELETE en /producto/**
+                        .requestMatchers(HttpMethod.GET, "/mascota/**").hasAnyRole("ADMIN", "CLIENTE")
+                        .requestMatchers(HttpMethod.GET, "/recomendaciones/**").hasAnyRole("ADMIN", "CLIENTE")
+                        .requestMatchers(HttpMethod.POST, "/mascota/**").hasAnyRole("ADMIN", "CLIENTE")
+                        .requestMatchers(HttpMethod.PUT, "/mascota/**").hasAnyRole("ADMIN", "CLIENTE")
+                        .requestMatchers(HttpMethod.DELETE, "/mascota/**").hasAnyRole("ADMIN", "CLIENTE")
+
 
                         // Todo lo demás requiere autenticación
                         .anyRequest().permitAll()

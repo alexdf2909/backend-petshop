@@ -49,6 +49,9 @@ public class Usuario {
     @Column(nullable = true)
     private Date refreshTokenExpiry;
 
+    @Column(nullable = true)
+    private String imagenPerfil;
+
     @ManyToMany
     @JoinTable(
             name = "usuario_favorito",

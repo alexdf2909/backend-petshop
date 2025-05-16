@@ -16,4 +16,12 @@ public class EspecieDTO {
     private String nombre;
 
     private String imagenUrl;
+
+    private Float pesoPequeno;
+
+    private Float pesoMediano;
+
+    private Integer edadCachorro;
+
+    private Integer edadAdulto;
 }

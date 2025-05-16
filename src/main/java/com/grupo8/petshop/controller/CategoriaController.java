@@ -13,7 +13,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/categoria")
 public class CategoriaController {
-    private final ICategoriaService categoriaService;
+    private final ICategoriaService categoriaService; //comentario
 
     public CategoriaController(ICategoriaService categoriaService) {
         this.categoriaService = categoriaService;

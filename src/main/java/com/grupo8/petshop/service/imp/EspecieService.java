@@ -27,6 +27,10 @@ public class EspecieService implements IEspecieService {
         Especie especie = new Especie();
         especie.setNombre(especieDTO.getNombre());
         especie.setImagenUrl(especieDTO.getImagenUrl());
+        especie.setEdadCachorro(especieDTO.getEdadCachorro());
+        especie.setEdadAdulto(especieDTO.getEdadAdulto());
+        especie.setPesoPequeno(especieDTO.getPesoPequeno());
+        especie.setPesoMediano(especieDTO.getPesoMediano());
 
         return especieRepository.save(especie);
     }
@@ -56,6 +60,18 @@ public class EspecieService implements IEspecieService {
         if (especieDTO.getImagenUrl() != null && !especieDTO.getImagenUrl().isEmpty()) {
             especie.setImagenUrl(especieDTO.getImagenUrl());
         }
+        if (especieDTO.getEdadCachorro() != null) {
+            especie.setEdadCachorro(especieDTO.getEdadCachorro());
+        }
+        if (especieDTO.getEdadAdulto() != null) {
+            especie.setEdadAdulto(especieDTO.getEdadAdulto());
+        }
+        if (especieDTO.getPesoPequeno() != null) {
+            especie.setPesoPequeno(especieDTO.getPesoPequeno());
+        }
+        if (especieDTO.getPesoMediano() != null) {
+            especie.setPesoMediano(especieDTO.getPesoMediano());
+        }
 
         especieRepository.save(especie);
     }
@@ -78,14 +94,18 @@ public class EspecieService implements IEspecieService {
         // Guardar los cambios en las prendas
         productoRepository.saveAll(productosWithEspecie);
         // Eliminar la categoría
-        especieRepository.delete(especie);
+        //especieRepository.delete(especie); //Desactive eliminado ya que mascota y raza tiene especie, no las podemos desactivar como producto
     }
 
     private EspecieDTO convertToDTO(Especie especie) {
         return new EspecieDTO(
                 especie.getEspecieId(),
                 especie.getNombre(),
-                especie.getImagenUrl()
+                especie.getImagenUrl(),
+                especie.getPesoPequeno(),
+                especie.getPesoMediano(),
+                especie.getEdadCachorro(),
+                especie.getEdadAdulto()
         );
     }
 }
