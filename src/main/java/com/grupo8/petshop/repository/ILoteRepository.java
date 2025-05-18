@@ -10,4 +10,5 @@ import java.util.List;
 public interface ILoteRepository extends JpaRepository<Lote, Long> {
     List<Lote> findByCompra(Compra compra);
     List<Lote> findByVariante(Variante variante);
+    List<Lote> findByVarianteAndIsDeletedFalse(Variante variante);
 }

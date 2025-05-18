@@ -40,6 +40,9 @@ public class Variante {
     @Column(nullable = false)
     private float precioOferta;
 
+    @Column(nullable = false)
+    private int stockMinimo;
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "variante_id", nullable = false)
     private Set<Imagen> imagenes = new HashSet<>();

@@ -109,6 +109,11 @@ public class LoteService implements ILoteService {
         if (loteDTO.getFechaFabricacion() != null) {
             lote.setFechaFabricacion(loteDTO.getFechaFabricacion());
         }
+        if(loteDTO.isDeleted() && !lote.isDeleted()){
+            deleteLote(loteDTO.getVarianteId());
+        }else{
+            lote.setDeleted(loteDTO.isDeleted());
+        }
 
         loteRepository.save(lote);
     }

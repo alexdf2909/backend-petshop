@@ -1,5 +1,6 @@
 package com.grupo8.petshop.controller;
 
+import com.grupo8.petshop.dto.VarianteConStockDTO;
 import com.grupo8.petshop.dto.entidades.VarianteDTO;
 import com.grupo8.petshop.entity.Variante;
 import com.grupo8.petshop.service.IVarianteService;
@@ -69,5 +70,11 @@ public class VarianteController {
         } else {
             return new ResponseEntity<>("{\"message\": \"variante no encontrada\"}", HttpStatus.NOT_FOUND);
         }
+    }
+
+    @GetMapping("/stock-bajo")
+    public ResponseEntity<List<VarianteConStockDTO>> obtenerVariantesConBajoStock() {
+        List<VarianteConStockDTO> resultado = varianteService.obtenerVariantesConBajoStock();
+        return ResponseEntity.ok(resultado);
     }
 }

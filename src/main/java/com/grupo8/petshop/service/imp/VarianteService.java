@@ -1,5 +1,6 @@
 package com.grupo8.petshop.service.imp;
 
+import com.grupo8.petshop.dto.VarianteConStockDTO;
 import com.grupo8.petshop.dto.entidades.VarianteDTO;
 import com.grupo8.petshop.entity.*;
 import com.grupo8.petshop.repository.*;
@@ -7,6 +8,7 @@ import com.grupo8.petshop.service.IVarianteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -60,6 +62,7 @@ public class VarianteService implements IVarianteService {
         variante.setPrecioOferta(varianteDTO.getPrecioOferta());
         variante.setPrecioOriginal(varianteDTO.getPrecioOriginal());
 
+        variante.setStockMinimo(varianteDTO.getStockMinimo());
         // Agregar imágenes
         if (varianteDTO.getImagenes() != null) {
             varianteDTO.getImagenes().forEach(imageUrl -> {
@@ -134,8 +137,13 @@ public class VarianteService implements IVarianteService {
         if (varianteDTO.getPrecioOriginal() > 0.0) {
             variante.setPrecioOriginal(varianteDTO.getPrecioOriginal());
         }
+        if(varianteDTO.getStockMinimo() > 0){
+            variante.setStockMinimo(varianteDTO.getStockMinimo());
+        }
         if(varianteDTO.isDeleted() && !variante.isDeleted()){
             deleteVariante(varianteDTO.getVarianteId());
+        }else{
+            variante.setDeleted(varianteDTO.isDeleted());
         }
 
         if (varianteDTO.getImagenes() != null) {
@@ -164,19 +172,25 @@ public class VarianteService implements IVarianteService {
         // Buscar la categoría a eliminar
         Optional<Variante> varianteOpt = varianteRepository.findById(id);
         if (varianteOpt.isEmpty()) {
-            throw new RuntimeException("Categoría no encontrada");
+            throw new RuntimeException("Variante no encontrada");
         }
         Variante variante = varianteOpt.get();
         // Buscar todas las prendas asociadas con esta categoría
-        List<Lote> lotesWithVariante = loteRepository.findByVariante(variante);
+        List<Variante> varianteWithProducto = varianteRepository.findByProducto(variante.getProducto());
         // Varianter todas las prendas asociadas como eliminadas lógicamente
-        for (Lote lote : lotesWithVariante) {
-            lote.setDeleted(true);
-        }
-        // Guardar los cambios en las prendas
-        loteRepository.saveAll(lotesWithVariante);
-        // Eliminar la categoría
         variante.setDeleted(true);
+        boolean tieneOtraVarianteActiva = false;
+        for (Variante v : varianteWithProducto) {
+            if (!v.isDeleted()) {
+                tieneOtraVarianteActiva = true;
+                break;
+            }
+        }
+        if(!tieneOtraVarianteActiva) {
+            Producto producto = variante.getProducto();
+            producto.setDeleted(true);
+            productoRepository.save(producto);
+        }
     }
 
     private VarianteDTO convertToDTO(Variante variante) {
@@ -188,10 +202,50 @@ public class VarianteService implements IVarianteService {
                 variante.getPeso().getPesoId(),
                 variante.getPrecioOriginal(),
                 variante.getPrecioOferta(),
+                variante.getStockMinimo(),
                 variante.getImagenes().stream()
                         .map(Imagen::getImagenUrl)
                         .collect(Collectors.toSet()),
                 variante.isDeleted()
         );
     }
+
+
+    @Override
+    public List<VarianteConStockDTO> obtenerVariantesConBajoStock() {
+        List<Variante> variantes = varianteRepository.findAll();
+        LocalDate hoy = LocalDate.now();
+
+        return variantes.stream().map(v -> {
+                    List<Lote> lotes = loteRepository.findByVarianteAndIsDeletedFalse(v);
+
+                    int stockUtil = lotes.stream()
+                            .filter(l -> l.getStock() > 0)
+                            .filter(l -> l.getFechaVencimiento() == null || l.getFechaVencimiento().isAfter(hoy))
+                            .mapToInt(Lote::getStock)
+                            .sum();
+
+                    int stockVencido = lotes.stream()
+                            .filter(l -> l.getFechaVencimiento() != null && l.getFechaVencimiento().isBefore(hoy))
+                            .mapToInt(Lote::getStock)
+                            .sum();
+
+                    String nombre = v.getProducto().getNombre()
+                            + (v.getTalla() != null ? " " + v.getTalla().getValor() : "")
+                            + (v.getPeso() != null ? " " + v.getPeso().getValor() : "")
+                            + (v.getColor() != null ? " " + v.getColor().getValor() : "");
+
+                    return new VarianteConStockDTO(
+                            v.getVarianteId(),
+                            nombre,
+                            stockUtil,
+                            stockVencido,
+                            v.getStockMinimo(),
+                            lotes.isEmpty()
+                    );
+                }).filter(dto -> dto.getStockUtil() < dto.getStockMinimo())
+                .collect(Collectors.toList());
+    }
+
+
 }

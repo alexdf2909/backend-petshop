@@ -1,5 +1,6 @@
 package com.grupo8.petshop.dto.entidades;
 
+import jakarta.persistence.Column;
 import lombok.*;
 
 import java.util.Set;
@@ -16,6 +17,7 @@ public class VarianteDTO {
     private Long pesoId;
     private float precioOriginal;
     private float precioOferta;
+    private int stockMinimo;
     private Set<String> imagenes;
     private boolean isDeleted;
 }
