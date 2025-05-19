@@ -12,8 +12,8 @@ public interface IUsuarioService {
     List<Usuario> searchAll();
     void updateUsuario(Long id, UsuarioDTO usuarioDTO);
     void deleteUsuario(Long id);
-    Optional<Usuario> addFavorite(Long usuarioId, Long productoId);
-    Optional<Usuario> removeFavorite(Long usuarioId, Long productoId);
+    Optional<Usuario> addFavorite(Long productoId);
+    Optional<Usuario> removeFavorite(Long productoId);
 
     // Obtener el perfil del cliente autenticado
     Optional<Usuario> getPerfilCliente();

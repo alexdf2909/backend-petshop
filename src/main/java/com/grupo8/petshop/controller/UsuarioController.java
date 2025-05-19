@@ -67,9 +67,9 @@ public class UsuarioController {
     }
 
     // Agregar favorito
-    @PostMapping("/{usuarioId}/favorito/{productoId}")
-    public ResponseEntity<Usuario> addFavorite(@PathVariable Long usuarioId, @PathVariable Long productoId) {
-        Optional<Usuario> updatedUser = usuarioService.addFavorite(usuarioId, productoId);
+    @PostMapping("/favorito/{productoId}")
+    public ResponseEntity<Usuario> addFavorite(@PathVariable Long productoId) {
+        Optional<Usuario> updatedUser = usuarioService.addFavorite(productoId);
         if (updatedUser.isPresent()) {
             return ResponseEntity.ok(updatedUser.get());
         } else {
@@ -78,9 +78,9 @@ public class UsuarioController {
     }
 
     // Eliminar favorito
-    @DeleteMapping("/{usuarioId}/favorito/{productoId}")
-    public ResponseEntity<Usuario> removeFavorite(@PathVariable Long usuarioId, @PathVariable Long productoId) {
-        Optional<Usuario> updatedUser = usuarioService.removeFavorite(usuarioId, productoId);
+    @DeleteMapping("/favorito/{productoId}")
+    public ResponseEntity<Usuario> removeFavorite(@PathVariable Long productoId) {
+        Optional<Usuario> updatedUser = usuarioService.removeFavorite(productoId);
         if (updatedUser.isPresent()) {
             return ResponseEntity.ok(updatedUser.get());
         } else {

@@ -1,6 +1,7 @@
 package com.grupo8.petshop.controller;
 
 import com.grupo8.petshop.dto.utils.CartItemDTO;
+import com.grupo8.petshop.dto.utils.PagoRequestDTO;
 import com.grupo8.petshop.dto.utils.PaymentFormDTO;
 import com.grupo8.petshop.service.imp.PaymentService;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,16 @@ public class PaymentController {
             return ResponseEntity.ok("Pago " + estado);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error al procesar el pago: " + e.getMessage());
+        }
+    }
+
+    @PostMapping("/completar")
+    public ResponseEntity<String> procesarPagoCompleto(@RequestBody PagoRequestDTO dto) {
+        try {
+            String mensaje = paymentService.procesarPedidoPago(dto);
+            return ResponseEntity.ok(mensaje);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
         }
     }
 

@@ -118,12 +118,11 @@ public class UsuarioService implements IUsuarioService {
 
     // Agregar favorito
     @Override
-    public Optional<Usuario> addFavorite(Long usuarioId, Long productoId) {
-        Optional<Usuario> usuarioOpt = usuarioRepository.findById(usuarioId);
+    public Optional<Usuario> addFavorite( Long productoId) {
+        Usuario usuario = getUsuarioAutenticado();
         Optional<Producto> productoOpt = productoRepository.findById(productoId);
 
-        if (usuarioOpt.isPresent() && productoOpt.isPresent()) {
-            Usuario usuario = usuarioOpt.get();
+        if (productoOpt.isPresent()) {
             Producto producto = productoOpt.get();
 
             if (!usuario.getFavoritos().contains(producto)) {
@@ -137,12 +136,11 @@ public class UsuarioService implements IUsuarioService {
 
     // Eliminar favorito
     @Override
-    public Optional<Usuario> removeFavorite(Long usuarioId, Long productoId) {
-        Optional<Usuario> usuarioOpt = usuarioRepository.findById(usuarioId);
+    public Optional<Usuario> removeFavorite( Long productoId) {
+        Usuario usuario = getUsuarioAutenticado();
         Optional<Producto> productoOpt = productoRepository.findById(productoId);
 
-        if (usuarioOpt.isPresent() && productoOpt.isPresent()) {
-            Usuario usuario = usuarioOpt.get();
+        if (productoOpt.isPresent()) {
             Producto producto = productoOpt.get();
 
             if (usuario.getFavoritos().contains(producto)) {
