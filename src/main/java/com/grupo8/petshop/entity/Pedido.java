@@ -44,7 +44,7 @@ public class Pedido {
     private MetodoPago metodoPago; // DEBITO, CREDITO, etc.
 
     @Enumerated(EnumType.STRING)
-    private EstadoPedido estadoPedido; // PENDIENTE, EN_CAMINO, ENTREGADO, CANCELADO
+    private EstadoPedido estadoPedido; // PENDIENTE, EN_PROGRESO, CANCELADO, COMPLETADO
 
     private String tiempoEstimadoEntrega;
 

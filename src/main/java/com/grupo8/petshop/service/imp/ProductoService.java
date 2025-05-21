@@ -100,7 +100,10 @@ public class ProductoService implements IProductoService {
         }
         if(productoDTO.isDeleted() && !producto.isDeleted()){
             deleteProducto(productoDTO.getProductoId());
+        }else{
+            producto.setDeleted(productoDTO.isDeleted());
         }
+
 
         if (productoDTO.getEtiquetaIds() != null) {
             Set<Etiqueta> updatedEtiquetas = new HashSet<>();
@@ -134,7 +137,7 @@ public class ProductoService implements IProductoService {
         }
         // Guardar los cambios en las prendas
         varianteRepository.saveAll(variantesWithProducto);
-        // Eliminar la categoría
+        // Eliminar el producto
         producto.setDeleted(true);
     }
 

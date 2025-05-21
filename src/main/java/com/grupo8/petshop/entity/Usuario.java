@@ -35,7 +35,7 @@ public class Usuario {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private Rol rol;
+    private Rol rol; //CLIENTE, ADMIN
 
     @Column(nullable = true)
     private String codigoVerificacion;

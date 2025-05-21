@@ -1,6 +1,7 @@
 package com.grupo8.petshop.controller;
 
-import com.grupo8.petshop.dto.VarianteConStockDTO;
+import com.grupo8.petshop.dto.utils.VarianteConDemandaDTO;
+import com.grupo8.petshop.dto.utils.VarianteConStockDTO;
 import com.grupo8.petshop.dto.entidades.VarianteDTO;
 import com.grupo8.petshop.entity.Variante;
 import com.grupo8.petshop.service.IVarianteService;
@@ -73,8 +74,8 @@ public class VarianteController {
     }
 
     @GetMapping("/stock-bajo")
-    public ResponseEntity<List<VarianteConStockDTO>> obtenerVariantesConBajoStock() {
-        List<VarianteConStockDTO> resultado = varianteService.obtenerVariantesConBajoStock();
+    public ResponseEntity<List<VarianteConDemandaDTO>> obtenerVariantesConBajoStockYDemanda() {
+        List<VarianteConDemandaDTO> resultado = varianteService.obtenerVariantesConBajoStockYDemanda();
         return ResponseEntity.ok(resultado);
     }
 }

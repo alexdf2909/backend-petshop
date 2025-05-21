@@ -1,4 +1,4 @@
-package com.grupo8.petshop.dto;
+package com.grupo8.petshop.dto.utils;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

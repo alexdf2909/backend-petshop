@@ -1,5 +1,6 @@
 package com.grupo8.petshop.entity;
 
+import com.grupo8.petshop.util.TipoInteraccion;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,8 +29,8 @@ public class HistorialInteraccion {
     @JoinColumn(name = "producto_id", nullable = false)
     private Producto producto;
 
-    @Column(nullable = false)
-    private String tipoInteraccion; // VISTA, CLIC, COMPRA
+    @Enumerated(EnumType.STRING)
+    private TipoInteraccion tipoInteraccion; // VISTA, CARRITO, COMPRA
 
     @Column(nullable = false)
     private LocalDateTime fecha;

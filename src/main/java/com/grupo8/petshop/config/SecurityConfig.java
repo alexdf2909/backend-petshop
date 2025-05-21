@@ -38,6 +38,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/peso/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/servicio/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/talla/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/recomendaciones/populares").permitAll()
+
+                        .requestMatchers(HttpMethod.GET, "/recomendaciones/top").hasRole("CLIENTE")
+                        .requestMatchers(HttpMethod.POST, "/recomendaciones/generar").hasRole("CLIENTE")
 
                         .requestMatchers(HttpMethod.POST, "/pago/**").hasRole("CLIENTE")
 
@@ -123,7 +127,7 @@ public class SecurityConfig {
 
                         // Solo ADMIN puede usar POST, PUT, DELETE en /producto/**
                         .requestMatchers(HttpMethod.GET, "/mascota/**").hasAnyRole("ADMIN", "CLIENTE")
-                        .requestMatchers(HttpMethod.GET, "/recomendaciones/**").hasAnyRole("ADMIN", "CLIENTE")
+                        .requestMatchers(HttpMethod.GET, "/recomendaciones/mascota/**").hasAnyRole("ADMIN", "CLIENTE")
                         .requestMatchers(HttpMethod.POST, "/mascota/**").hasAnyRole("ADMIN", "CLIENTE")
                         .requestMatchers(HttpMethod.PUT, "/mascota/**").hasAnyRole("ADMIN", "CLIENTE")
                         .requestMatchers(HttpMethod.DELETE, "/mascota/**").hasAnyRole("ADMIN", "CLIENTE")
@@ -131,6 +135,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/pedido").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/pedido/usuario/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/pedido/**").hasRole("ADMIN")
+
+                        .requestMatchers(HttpMethod.GET, "/reportes/**").hasRole("ADMIN")
 
 
                         // Todo lo demás requiere autenticación

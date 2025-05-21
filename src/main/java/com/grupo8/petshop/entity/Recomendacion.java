@@ -28,4 +28,7 @@ public class Recomendacion {
 
     @Column(nullable = false)
     private float puntaje;
+
+    @Column(nullable = true)
+    private Integer frecuenciaRecomendadaDias;
 }

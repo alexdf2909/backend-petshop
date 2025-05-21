@@ -4,10 +4,7 @@ import com.grupo8.petshop.dto.utils.PagoRequestDTO;
 import com.grupo8.petshop.dto.utils.PaymentFormDTO;
 import com.grupo8.petshop.entity.*;
 import com.grupo8.petshop.repository.*;
-import com.grupo8.petshop.util.EstadoPedido;
-import com.grupo8.petshop.util.MetodoPago;
-import com.grupo8.petshop.util.ModoEntrega;
-import com.grupo8.petshop.util.ProgresoEntrega;
+import com.grupo8.petshop.util.*;
 import com.mercadopago.client.common.IdentificationRequest;
 import com.mercadopago.client.payment.PaymentClient;
 import com.mercadopago.client.payment.PaymentCreateRequest;
@@ -39,6 +36,7 @@ public class PaymentService {
     private final ILoteRepository loteRepository;
     private final IPedidoRepository pedidoRepository;
     private final IDetallePedidoRepository detallePedidoRepository;
+    private final IHistorialInteraccionRepository historialInteraccionRepository;
 
     public String crearPreferencia(List<CartItemDTO> carrito) throws Exception {
 
@@ -158,6 +156,14 @@ public class PaymentService {
                     .build();
 
             detallePedidoRepository.save(detalle);
+
+            HistorialInteraccion historialInteraccion = HistorialInteraccion.builder()
+                    .tipoInteraccion(TipoInteraccion.COMPRA)
+                    .fecha(LocalDateTime.now())
+                    .producto(variante.getProducto())
+                    .usuario(usuario)
+                    .build();
+            historialInteraccionRepository.save(historialInteraccion);
 
             int cantidadNecesaria = item.getCantidad();
             List<Lote> lotesWithVariante = loteRepository.findByVarianteAndIsDeletedFalse(variante);

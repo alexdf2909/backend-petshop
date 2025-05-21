@@ -1,6 +1,8 @@
 package com.grupo8.petshop.service.imp;
 
-import com.grupo8.petshop.dto.VarianteConStockDTO;
+import com.grupo8.petshop.dto.utils.UsuarioFrecuenteDTO;
+import com.grupo8.petshop.dto.utils.VarianteConDemandaDTO;
+import com.grupo8.petshop.dto.utils.VarianteConStockDTO;
 import com.grupo8.petshop.dto.entidades.VarianteDTO;
 import com.grupo8.petshop.entity.*;
 import com.grupo8.petshop.repository.*;
@@ -9,8 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,6 +29,8 @@ public class VarianteService implements IVarianteService {
     private ITallaRepository tallaRepository;
     @Autowired
     private IPesoRepository pesoRepository;
+    @Autowired
+    private IDetallePedidoRepository detallePedidoRepository;
 
     public VarianteService(IVarianteRepository varianteRepository) {
         this.varianteRepository = varianteRepository;
@@ -57,7 +62,7 @@ public class VarianteService implements IVarianteService {
                 .orElseThrow(() -> new RuntimeException("Producto no encontrada"));
 
 
-        variante.setDeleted(false);
+        variante.setDeleted(varianteDTO.isDeleted());
         variante.setProducto(producto);
         variante.setPrecioOferta(varianteDTO.getPrecioOferta());
         variante.setPrecioOriginal(varianteDTO.getPrecioOriginal());
@@ -246,6 +251,112 @@ public class VarianteService implements IVarianteService {
                 }).filter(dto -> dto.getStockUtil() < dto.getStockMinimo())
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<VarianteConDemandaDTO> obtenerVariantesConBajoStockYDemanda() {
+        List<Variante> variantes = varianteRepository.findAll();
+        LocalDate hoy = LocalDate.now();
+        LocalDateTime hace30Dias = hoy.minusDays(30).atStartOfDay();
+        final int DIAS_UMBRAL = 7; // Próxima recompras dentro de 7 días son consideradas urgentes
+
+        return variantes.stream().map(v -> {
+            List<Lote> lotes = loteRepository.findByVarianteAndIsDeletedFalse(v);
+
+            int stockUtil = lotes.stream()
+                    .filter(l -> l.getStock() > 0)
+                    .filter(l -> l.getFechaVencimiento() == null || l.getFechaVencimiento().isAfter(hoy))
+                    .mapToInt(Lote::getStock)
+                    .sum();
+
+            int stockVencido = lotes.stream()
+                    .filter(l -> l.getFechaVencimiento() != null && l.getFechaVencimiento().isBefore(hoy))
+                    .mapToInt(Lote::getStock)
+                    .sum();
+
+            String nombre = v.getProducto().getNombre()
+                    + (v.getTalla() != null ? " " + v.getTalla().getValor() : "")
+                    + (v.getPeso() != null ? " " + v.getPeso().getValor() : "")
+                    + (v.getColor() != null ? " " + v.getColor().getValor() : "");
+
+            List<DetallePedido> detalles = detallePedidoRepository.findByVarianteAndPedido_FechaRegistroAfter(v, hace30Dias);
+
+            Map<Usuario, List<DetallePedido>> porUsuario = detalles.stream()
+                    .collect(Collectors.groupingBy(dp -> dp.getPedido().getUsuario()));
+
+            List<UsuarioFrecuenteDTO> usuariosFrecuentes = porUsuario.entrySet().stream()
+                    .map(entry -> {
+                        Usuario usuario = entry.getKey();
+                        List<DetallePedido> pedidos = entry.getValue();
+
+                        int cantidadTotal = pedidos.stream().mapToInt(DetallePedido::getCantidad).sum();
+                        int cantidadPromedio = cantidadTotal / pedidos.size();
+
+                        List<LocalDate> fechas = pedidos.stream()
+                                .map(dp -> dp.getPedido().getFechaRegistro().toLocalDate())
+                                .sorted()
+                                .toList();
+
+                        LocalDate fechaUltima = fechas.get(fechas.size() - 1);
+
+                        LocalDate fechaProximaRecompra = null;
+                        if (fechas.size() > 1) {
+                            List<Long> diferencias = new ArrayList<>();
+                            for (int i = 1; i < fechas.size(); i++) {
+                                diferencias.add(ChronoUnit.DAYS.between(fechas.get(i - 1), fechas.get(i)));
+                            }
+                            OptionalDouble promedioDias = diferencias.stream().mapToLong(Long::longValue).average();
+                            if (promedioDias.isPresent()) {
+                                long dias = (long) promedioDias.getAsDouble();
+                                if (dias < 1) dias = 1;
+                                fechaProximaRecompra = fechaUltima.plusDays(dias);
+                            }
+                        }
+
+                        return new UsuarioFrecuenteDTO(
+                                usuario.getUsuarioId(),
+                                usuario.getNombre(),
+                                cantidadPromedio,
+                                fechaUltima,
+                                fechaProximaRecompra
+                        );
+                    })
+                    .filter(uf -> uf.getFechaProximaRecompra() != null)
+                    .toList();
+
+            // Nueva lógica: ¿hay algún usuario con próxima recompra urgente y cantidad promedio > stock actual?
+            boolean demandaUrgenteNoCubierta = usuariosFrecuentes.stream().anyMatch(uf ->
+                    ChronoUnit.DAYS.between(hoy, uf.getFechaProximaRecompra()) <= DIAS_UMBRAL &&
+                            uf.getCantidadPromedio() > stockUtil
+            );
+
+            // Fecha mínima de próxima recompra
+            LocalDate fechaProxima = usuariosFrecuentes.stream()
+                    .map(UsuarioFrecuenteDTO::getFechaProximaRecompra)
+                    .min(LocalDate::compareTo)
+                    .orElse(null);
+
+            // Cantidad total estimada (suma de promedios)
+            int cantidadRecurrenteSugerida = usuariosFrecuentes.stream()
+                    .mapToInt(UsuarioFrecuenteDTO::getCantidadPromedio)
+                    .sum();
+
+            if (stockUtil < v.getStockMinimo() || demandaUrgenteNoCubierta) {
+                return new VarianteConDemandaDTO(
+                        v.getVarianteId(),
+                        nombre,
+                        stockUtil,
+                        stockVencido,
+                        v.getStockMinimo(),
+                        lotes.isEmpty(),
+                        cantidadRecurrenteSugerida,
+                        fechaProxima,
+                        usuariosFrecuentes
+                );
+            }
+            return null;
+        }).filter(Objects::nonNull).collect(Collectors.toList());
+    }
+
 
 
 }

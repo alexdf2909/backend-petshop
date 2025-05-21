@@ -6,10 +6,11 @@ import com.grupo8.petshop.entity.Producto;
 import java.util.List;
 
 public interface IRecomendacionService {
+    List<Producto> recomendarProductosPorMascota(Long mascotaId);
+    List<String> generarEtiquetasDesdeMascota(Mascota mascota);
+    void generarRecomendacionesParaUsuario();
+    List<Producto> obtenerProductosMasPopulares(int top);
+    List<Producto> obtenerTopRecomendadosParaUsuario(int top);
 
-
-         List<Producto> recomendarProductosPorMascota(Long mascotaId);
-
-         List<String> generarEtiquetasDesdeMascota(Mascota mascota);
 
 }
